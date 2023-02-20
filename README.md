@@ -27,7 +27,7 @@
 </p>
 
 
-# MH-Trailers
+# MH-Trailers (BETA)
 - Transport all your vehicles with trailers. 
 
 # How it works
