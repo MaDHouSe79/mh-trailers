@@ -32,9 +32,11 @@
 
 # How it works
 - Everyting works with the target eye.
-- First you put 3 cars on the top platform, 
-- then you lock the vehicles by loking to the trailer and use the target, and then you can raise the platform, 
-- when you raised the platform you can then use the lower platform,
+- First you look with target to the trailer, then you get a few options, 
+- fist use ramp down than use platform down, you can now put vehicles on the top of this platform, 
+- then you lock the vehicles by looking to the trailer and use again the target, and then you can raise the platform.
+- With this the all top vehicles will belocked automaticly.
+- when you have raised the top platform, you can then use the lower platform.
 - which it in this order and it should work fine.
 
 
