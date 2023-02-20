@@ -27,7 +27,7 @@
 </p>
 
 
-# MH-Trailers (BETA)
+# MH-Trailers (Alpha stage)
 - Transport all your vehicles with trailers. 
 
 # How it works
