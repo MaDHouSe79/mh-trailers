@@ -59,16 +59,6 @@ QBCore.Functions.CreateCallback("mh-trailers:server:GetTrailerData", function(so
     end
 end)
 
-QBCore.Commands.Add('spawnramp', "Spawn Ramp", {}, true, function(source)
-    local src = source
-    TriggerClientEvent('mh-trailers:client:toggleBackRamp', src)
-end, 'admin')
-
-QBCore.Commands.Add('trailertest', "Spawn Ramp", {}, true, function(source)
-    local src = source
-    TriggerClientEvent('mh-trailers:client:onjoin', src, trailers)
-end, 'admin')
-
 AddEventHandler('onResourceStart', function(resource)
     if resource == GetCurrentResourceName() then
         trailers = {}
