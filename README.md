@@ -51,6 +51,9 @@
 - so don't forget this part cause i'm not going to help you fixing your issues if you don't read this file.
 
 
+# Adding new trailers
+- Make cure you add all settings in the config file correctly.
+- cause i'm not going to help adding more trailers, cause it's not that hard to do.
 
 ## 🎥 Video 👊😁👍
 [![Watch the video]](https://www.youtube.com/watch?v=D1MGNhh1p8E)
