@@ -31,11 +31,23 @@
 - Transport all your vehicles with trailers. 
 
 # How it works
-- first you put 3 cars on the top platform, 
-- then you lock the vehicles and then you can raise the platform, 
-- if you don't do this cars can fall off, 
-- when you raised the platform you can then use the lower platform, 
+- Everyting works with the target eye.
+- First you put 3 cars on the top platform, 
+- then you lock the vehicles by loking to the trailer and use the target, and then you can raise the platform, 
+- when you raised the platform you can then use the lower platform,
 - which it in this order and it should work fine.
+
+
+# My trailers does not work
+- Make sure you add the right trailer hash key in the config file
+- same for the vehicles
+- make sure all settings in the config are correvt.
+
+# NOTE for ignore vehicles.
+- What this does is, it ignore the vehicle you tow the trailer with,
+- if you don't add this vehicle hash in the ignore vehicle in the config file things does wrong and the truck will also be stuck on the trailer,
+- so don't forget this part cause i'm not going to help you fixing your issues if you don't read this file.
+
 
 
 ## 🎥 Video 👊😁👍
