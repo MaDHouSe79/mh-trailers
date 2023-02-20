@@ -29,6 +29,8 @@
 
 # MH-Trailers (BETA)
 - Transport all your vehicles with trailers. 
+- Trailer rent shop build in.
+
 
 # How it works
 - Everyting works with the target eye.
