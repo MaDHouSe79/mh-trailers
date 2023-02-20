@@ -30,6 +30,14 @@
 # MH-Trailers
 - Transport all your vehicles with trailers. 
 
+# How it works
+- first you put 3 cars on the top platform, 
+- then you lock the vehicles and then you can raise the platform, 
+- if you don't do this cars can fall off, 
+- when you raised the platform you can then use the lower platform, 
+- which it in this order and it should work fine.
+
+
 ## 🎥 Video 👊😁👍
 [![Watch the video]](https://www.youtube.com/watch?v=D1MGNhh1p8E)
 
