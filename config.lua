@@ -45,18 +45,18 @@ Config.IgnoreVehicle = {
 Config.TrailerSettings = {
     -- tr2 trailer
     [2078290630] = {
-        offsetX = 0.0,
-        offsetY = 0.0,
-        offsetZ = 0.08,
-        hasRamp = false,
-        hasdoors = true,
-        width = 3.0,
-        length = 9.0,
-        loffset = -1.0,
-        doors = {ramp = 5, platform = 4},
-        ramp = {},
-        maxspace = 6,
-        parked = 0,
+        offsetX = 0.0,   -- dont edit this part
+        offsetY = 0.0,   -- dont edit this part
+        offsetZ = 0.08,  -- dont edit this part
+        hasRamp = false, -- if this trailer has a ramp already
+        hasdoors = true, -- if this trailer has doors (this can be ramps as well, depends on the door numver)
+        width = 3.0,     -- the width of the trailer 
+        length = 9.0,    -- the length of the trailer
+        loffset = -1.0,  -- lower offset (dont edit this part)
+        doors = {ramp = 5, platform = 4}, -- door numbers (make sure this is right)
+        ramp = {},       -- this trailer has its own ramp
+        maxspace = 6,    -- max space for vehicles
+        parked = 0,      -- count the total parked vehicles on this trailer.
     },
 
     -- pjtrailer (gooseneck)
