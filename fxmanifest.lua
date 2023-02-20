@@ -9,7 +9,7 @@ version '1.0.0'
 shared_scripts {
     '@qb-core/shared/locale.lua',
     '@qb-core/shared/vehicles.lua',
-    'locales/nl.lua', -- change to your language (en/nl) for now
+    'locales/en.lua', -- change to your language (en/nl) for now
     'config.lua',
 }
 
