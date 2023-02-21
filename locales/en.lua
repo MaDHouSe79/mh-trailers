@@ -30,7 +30,7 @@ local Translations = {
         ['trailer'] = "Trailer",
     },
 }
-Lang:t('menu.truck')
+
 Lang = Lang or Locale:new({
     phrases = Translations, 
     warnOnMissing = true
