@@ -45,7 +45,7 @@
 # My trailers does not work
 - Make sure you add the right trailer hash key in the config file
 - same for the vehicles
-- make sure all settings in the config are correvt.
+- make sure all settings in the config are correct.
 
 # NOTE for ignore vehicles.
 - What this does is, it ignore the vehicle you tow the trailer with,
@@ -54,7 +54,7 @@
 
 
 # Adding new trailers
-- Make cure you add all settings in the config file correctly.
+- Make sure you add all settings in the config file correctly.
 - cause i'm not going to help adding more trailers, cause it's not that hard to do.
 
 ## 🎥 Video 👊😁👍
