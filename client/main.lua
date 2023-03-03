@@ -647,6 +647,8 @@ AddEventHandler('QBCore:Client:OnPlayerLoaded', function()
     --TriggerServerEvent("mh-trailers:server:onjoin")
     trailers = {}
     LoadTarget()
+    createPed()
+    createBlip()
 end)
 
 AddEventHandler('onResourceStart', function(resource)
