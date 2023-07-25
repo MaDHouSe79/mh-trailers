@@ -3,7 +3,7 @@ Config.AttachedKey = 38     -- 38 = E
 Config.AttacheKeyTxt = "E"  -- if AttachedKey = 38 this is E
 
 Config.Models = {
-    trucks = {'man', "trans_mbenzarocs",},
+    trucks = {'hauler',},
     trailers = {'tr2', 'trailersmall', 'boattrailer', 'trflat', 'cotrailer', 'flatbed3amber', 'trans-laso_trailer',},
     ramp = "imp_prop_flatbed_ramp" -- hash -901038522
 }
