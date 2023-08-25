@@ -363,7 +363,7 @@ local function LockVehiclesOnTrailer(trailer)
 end
 
 local function AddVehicleOnTrailer(trailer)
-    local car = GetVehiclePedIsIn(PlayerPedId(), 0)
+    local car = GetVehiclePedIsIn(PlayerPedId(), false)
     if IsEntityTouchingEntity(trailer, car) then
         if not IsVehicleAttachedToTrailer(car) then
             SetVehicleEngineOn(car, false, false, true)
