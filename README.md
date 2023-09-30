@@ -66,10 +66,8 @@
 - [qb-target](https://github.com/BerkieBb/qb-target) (Required)
 
 
-## 🙈 Youtube & Discord
+## 🙈 Youtube
 - [Youtube](https://www.youtube.com/@MaDHouSe79) for videos
-- [Discord](https://discord.gg/cEMSeE9dgS)
-
 
 # LICENSE
 [GPL LICENSE](./LICENSE)<br />
