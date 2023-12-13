@@ -1,5 +1,5 @@
 local QBCore = exports['qb-core']:GetCoreObject()
-local rampDoornumber = nil     -- 5 ramp
+local rampDoornumber = nil -- 5 ramp
 local platformDoorNumber = nil -- 4 platform
 local currentTruck = nil
 local currentTrailer = nil
@@ -23,7 +23,7 @@ end
 local function SetFuel(vehicle, fuel)
     if type(fuel) == 'number' and fuel >= 0 and fuel <= 100 then
         SetVehicleFuelLevel(vehicle, fuel + 0.0)
-	    DecorSetFloat(vehicle, "_FUEL_LEVEL", GetVehicleFuelLevel(vehicle))
+        DecorSetFloat(vehicle, "_FUEL_LEVEL", GetVehicleFuelLevel(vehicle))
     end
 end
 
@@ -34,7 +34,7 @@ local function Park()
         Wait(1500)
         QBCore.Functions.DeleteVehicle(veh)
         DeleteEntity(GetVehiclePedIsIn(ped, false))
-    end 
+    end
 end
 
 local function createGarage()
@@ -43,16 +43,14 @@ local function createGarage()
         heading = Config.Rent.spawn.heading,
         debugPoly = false,
         minZ = Config.Rent.spawn.garage.z - 1,
-        maxZ = Config.Rent.spawn.garage.z + 1,
+        maxZ = Config.Rent.spawn.garage.z + 1
     }, {
-        options = {
-            {
-                type = "client",
-                event = "qb-trailers:client:park",
-                icon = "fas fa-sign-in-alt",
-                label = "Park Vehicle",
-            },
-        },
+        options = {{
+            type = "client",
+            event = "qb-trailers:client:park",
+            icon = "fas fa-sign-in-alt",
+            label = "Park Vehicle"
+        }},
         distance = 1.5
     })
 
@@ -128,11 +126,13 @@ local function SpawnTruckAndTrailer(truckModel, trailerModel)
     local vehicle = nil
     if not QBCore.Functions.SpawnClear(tmpSpawnPosition, 5.0) then
         QBCore.Functions.Notify(Lang:t('error.area_is_obstructed'), 'error', 5000)
-		return
-	else
-        
+        return
+    else
+
         if truckModel ~= nil then
-            if trailerModel == "boattrailer" then truckModel = "sadler" end
+            if trailerModel == "boattrailer" then
+                truckModel = "sadler"
+            end
             ClearAreaOfVehicles(tmpSpawnPosition, 10000, false, false, false, false, false)
             spawnTruck(truckModel, tmpSpawnPosition, heading)
         end
@@ -152,24 +152,25 @@ local function deletePed()
 end
 
 local function createPed()
-    if not rentPed then rentPed = {} end
+    if not rentPed then
+        rentPed = {}
+    end
     local current = GetHashKey(Config.Rent.shop.ped)
     loadModel(current)
-    rentPed = CreatePed(0, current, Config.Rent.shop.location.x, Config.Rent.shop.location.y, Config.Rent.shop.location.z - 1, Config.Rent.shop.location.w, false, false)
+    rentPed = CreatePed(0, current, Config.Rent.shop.location.x, Config.Rent.shop.location.y,
+        Config.Rent.shop.location.z - 1, Config.Rent.shop.location.w, false, false)
     TaskStartScenarioInPlace(rentPed, Config.Rent.shop.location.scenario, true)
-    FreezeEntityPosition(rentPed, true)    
+    FreezeEntityPosition(rentPed, true)
     SetEntityInvincible(rentPed, true)
     SetBlockingOfNonTemporaryEvents(rentPed, true)
     exports['qb-target']:AddTargetEntity(rentPed, {
-        options = {
-            {
-                label = Lang:t('target.rent_a_vehicle'),
-                icon = 'fa-solid fa-coins',
-                action = function()
-                    TriggerEvent('mh-trailers:client:TruckAndTrailerMenu')
-                end
-            }
-        },
+        options = {{
+            label = Lang:t('target.rent_a_vehicle'),
+            icon = 'fa-solid fa-coins',
+            action = function()
+                TriggerEvent('mh-trailers:client:TruckAndTrailerMenu')
+            end
+        }},
         distance = 2.0
     })
 end
@@ -200,62 +201,83 @@ end
 
 local function AddVehicleToTrailer(trailer, vehicle)
     if trailer ~= nil then
-        if isVehicleLoaded(vehicle) then return end
+        if isVehicleLoaded(vehicle) then
+            return
+        end
         local tPlate = QBCore.Functions.GetPlate(trailer)
         local vPlate = QBCore.Functions.GetPlate(vehicle)
-        if trailers[tPlate] == nil then trailers[tPlate] = {} end
-        trailers[tPlate][#trailers[tPlate] + 1] = {vehicle = vehicle, plate = vPlate}
-        if Config.DebugTrailers then print(json.encode(trailers, {indent = true})) end
+        if trailers[tPlate] == nil then
+            trailers[tPlate] = {}
+        end
+        trailers[tPlate][#trailers[tPlate] + 1] = {
+            vehicle = vehicle,
+            plate = vPlate
+        }
+        if Config.DebugTrailers then
+            print(json.encode(trailers, {
+                indent = true
+            }))
+        end
     end
 end
 
 local function RemoveVehicleFromTrailer(vehicle)
     if currentTrailer ~= nil then
         local tPlate = QBCore.Functions.GetPlate(currentTrailer)
-        if not isVehicleLoaded(vehicle) then return end
+        if not isVehicleLoaded(vehicle) then
+            return
+        end
         if trailers[tPlate] then
             for i = 1, #trailers[tPlate] do
                 local data = trailers[tPlate][i]
                 if trailers[tPlate][i] then
                     if trailers[tPlate][i].vehicle == vehicle then
-                        TriggerServerEvent('mh-trailers:server:removevehicle', VehToNet(currentTrailer), VehToNet(vehicle))
+                        TriggerServerEvent('mh-trailers:server:removevehicle', VehToNet(currentTrailer),
+                            VehToNet(vehicle))
                         trailers[tPlate][i].vehicle = nil
                     end
                 end
             end
             trailers[tPlate] = {}
         end
-        if Config.DebugTrailers then print(json.encode(trailers, {indent = true})) end
+        if Config.DebugTrailers then
+            print(json.encode(trailers, {
+                indent = true
+            }))
+        end
     end
 end
 
 local entityEnumerator = {
-	__gc = function(enum)
-	    if enum.destructor and enum.handle then
-		    enum.destructor(enum.handle)
-	    end
-	    enum.destructor = nil
-	    enum.handle = nil
-	end
+    __gc = function(enum)
+        if enum.destructor and enum.handle then
+            enum.destructor(enum.handle)
+        end
+        enum.destructor = nil
+        enum.handle = nil
+    end
 }
 
 local function EnumerateEntities(initFunc, moveFunc, disposeFunc)
-	return coroutine.wrap(function()
-	    local iter, id = initFunc()
-	    if not id or id == 0 then
-	        disposeFunc(iter)
-		    return
-	    end
-	    local enum = {handle = iter, destructor = disposeFunc}
-	    setmetatable(enum, entityEnumerator)
-	    local next = true
-	    repeat
-		    coroutine.yield(id)
-		    next, id = moveFunc(iter)
-	    until not next
-	    enum.destructor, enum.handle = nil, nil
-	    disposeFunc(iter)
-	end)
+    return coroutine.wrap(function()
+        local iter, id = initFunc()
+        if not id or id == 0 then
+            disposeFunc(iter)
+            return
+        end
+        local enum = {
+            handle = iter,
+            destructor = disposeFunc
+        }
+        setmetatable(enum, entityEnumerator)
+        local next = true
+        repeat
+            coroutine.yield(id)
+            next, id = moveFunc(iter)
+        until not next
+        enum.destructor, enum.handle = nil, nil
+        disposeFunc(iter)
+    end)
 end
 
 local function EnumerateVehicles()
@@ -328,7 +350,8 @@ local function AttachToTrailer(trailer, vehicle)
                 local trailerHeading = GetEntityHeading(trailer)
                 local vehicleHeading = GetEntityHeading(vehicle)
                 local chassisBone = GetEntityBoneIndexByName(trailer, "chassis")
-                AttachEntityToEntity(vehicle, trailer, chassisBone, vector3(vehOff.x, vehOff.y, vehOff.z), vector3(vehrot.y, (vehrot.x + trot.y) / 2, vehicleHeading - trailerHeading), 1, 0, 1, 0, 0, 1)
+                AttachEntityToEntity(vehicle, trailer, chassisBone, vector3(vehOff.x, vehOff.y, vehOff.z),
+                    vector3(vehrot.y, (vehrot.x + trot.y) / 2, vehicleHeading - trailerHeading), 1, 0, 1, 0, 0, 1)
                 SetEntityCanBeDamaged(vehicle, false)
             else
                 QBCore.Functions.Notify(Lang:t('notify.already_on_trailer'))
@@ -350,7 +373,9 @@ local function LockVehiclesOnTrailer(trailer)
                             local vehRotation = GetEntityRotation(car)
                             local localcoords = GetOffsetFromEntityGivenWorldCoords(trailer, GetEntityCoords(car))
                             local trailerData = GetTrailerData(trailer)
-                            AttachVehicleOnToTrailer(car, trailer, 0.0, 0.0, 0.0, localcoords.x + trailerData.offsetX, localcoords.y + trailerData.offsetY, localcoords.z + trailerData.offsetZ, vehRotation.x, vehRotation.y, 0.0, false)
+                            AttachVehicleOnToTrailer(car, trailer, 0.0, 0.0, 0.0, localcoords.x + trailerData.offsetX,
+                                localcoords.y + trailerData.offsetY, localcoords.z + trailerData.offsetZ, vehRotation.x,
+                                vehRotation.y, 0.0, false)
                             SetEntityCanBeDamaged(car, false)
                             AddVehicleToTrailer(trailer, car)
                             Wait(100)
@@ -367,20 +392,23 @@ local function AddVehicleOnTrailer(trailer)
     if IsEntityTouchingEntity(trailer, car) then
         if not IsVehicleAttachedToTrailer(car) then
             SetVehicleEngineOn(car, false, false, true)
-            
+
             -- (boattrailer) or (trailersmall)
-            if GetEntityModel(trailer) == 524108981 or GetEntityModel(trailer) == 712162987 then 
-                AttachEntityToEntity(car, trailer, 20, 0.0, -1.0, 0.25, 0.0, 0.0, 0.0, false, false, true, false, 20, true)
-            
-            -- tr2 trailer
-            elseif GetEntityModel(trailer) == 2078290630 then 
+            if GetEntityModel(trailer) == 524108981 or GetEntityModel(trailer) == 712162987 then
+                AttachEntityToEntity(car, trailer, 20, 0.0, -1.0, 0.25, 0.0, 0.0, 0.0, false, false, true, false, 20,
+                    true)
+
+                -- tr2 trailer
+            elseif GetEntityModel(trailer) == 2078290630 then
                 local vehRotation = GetEntityRotation(car)
                 local localcoords = GetOffsetFromEntityGivenWorldCoords(trailer, GetEntityCoords(car))
                 local trailerData = GetTrailerData(trailer)
-                AttachVehicleOnToTrailer(car, trailer, 0.0, 0.0, 0.0, localcoords.x + trailerData.offsetX, localcoords.y + trailerData.offsetY, localcoords.z + trailerData.offsetZ, vehRotation.x, vehRotation.y, 0.0, false)
-            
-            -- trflat (only a ramp)
-            elseif GetEntityModel(trailer) == -1352468814 then 
+                AttachVehicleOnToTrailer(car, trailer, 0.0, 0.0, 0.0, localcoords.x + trailerData.offsetX,
+                    localcoords.y + trailerData.offsetY, localcoords.z + trailerData.offsetZ, vehRotation.x,
+                    vehRotation.y, 0.0, false)
+
+                -- trflat (only a ramp)
+            elseif GetEntityModel(trailer) == -1352468814 then
                 AttachToTrailer(trailer, car)
             else
                 AttachToTrailer(trailer, car)
@@ -397,10 +425,10 @@ local function CanInterAct(model)
     if Config.TrailerSettings[model] then
         if Config.TrailerSettings[model].doors ~= nil then
             if Config.TrailerSettings[model].doors.platform ~= nil then
-                platformDoorNumber = Config.TrailerSettings[model].doors.platform--4 -- platform
+                platformDoorNumber = Config.TrailerSettings[model].doors.platform -- 4 -- platform
             end
             if Config.TrailerSettings[model].doors.ramp ~= nil then
-                rampDoornumber = Config.TrailerSettings[model].doors.ramp --5     -- ramp
+                rampDoornumber = Config.TrailerSettings[model].doors.ramp -- 5     -- ramp
             end
         end
     end
@@ -418,152 +446,186 @@ local function LoadTarget()
     -- target for all vehicles
     for k, vehicle in pairs(QBCore.Shared.Vehicles) do
         exports['qb-target']:AddTargetModel(k, {
-            options = {
-                { 
-                    type = "client",
-                    event = "mh-trailers:client:getin",
-                    icon = "fas fa-car",
-                    label = Lang:t('target.get_in'),
-                    action = function(entity)
-                        GetIn(entity)
-                    end,
-                    canInteract = function(entity, distance, data)
-                        if currentTrailer == nil then return false end
-                        if IsTrailer(entity) then return false end
-                        return true
+            options = {{
+                type = "client",
+                event = "mh-trailers:client:getin",
+                icon = "fas fa-car",
+                label = Lang:t('target.get_in'),
+                action = function(entity)
+                    GetIn(entity)
+                end,
+                canInteract = function(entity, distance, data)
+                    if currentTrailer == nil then
+                        return false
                     end
-                },
-            },
-            distance = 15.0 
+                    if IsTrailer(entity) then
+                        return false
+                    end
+                    return true
+                end
+            }},
+            distance = 15.0
         })
     end
     -- target ramp model
     exports['qb-target']:AddTargetModel(Config.Models.ramp, {
-        options = {
-            -- ramp
-            { 
-                type = "client",
-                event = "mh-trailers:client:deleteRamp",
-                icon = "fas fa-car",
-                label = Lang:t('target.remove_ramp'),
-                action = function(entity)
-                    rarmPlaced = false
-                    DeleteEntity(entity)
-                end,
-                canInteract = function(entity, distance, data)
-                    if not rarmPlaced then return false end
-                    if not Config.TrailerSettings[GetEntityModel(currentTrailer)].hasRamp then return false end
-                    return true
+        options = { -- ramp
+        {
+            type = "client",
+            event = "mh-trailers:client:deleteRamp",
+            icon = "fas fa-car",
+            label = Lang:t('target.remove_ramp'),
+            action = function(entity)
+                rarmPlaced = false
+                DeleteEntity(entity)
+            end,
+            canInteract = function(entity, distance, data)
+                if not rarmPlaced then
+                    return false
                 end
-            },
-        },
-        distance = 5.0 
+                if not Config.TrailerSettings[GetEntityModel(currentTrailer)].hasRamp then
+                    return false
+                end
+                return true
+            end
+        }},
+        distance = 5.0
     })
 
     -- trailer trailers 
     exports['qb-target']:AddTargetModel(Config.Models.trailers, {
-        options = {
-            -- ramp
-            { 
-                type = "client",
-                event = "mh-trailers:client:toggleDoor",
-                icon = "fas fa-car",
-                label = Lang:t('target.ramp_up'),
-                canInteract = function(entity, distance, data)
-                    if platformIsDown then return false end
-                    if not rampIsOpen then return false end
-                    if not IsTrailer(entity) then return false end
-                    currentTrailer = entity
-                    return true
+        options = { -- ramp
+        {
+            type = "client",
+            event = "mh-trailers:client:toggleDoor",
+            icon = "fas fa-car",
+            label = Lang:t('target.ramp_up'),
+            canInteract = function(entity, distance, data)
+                if platformIsDown then
+                    return false
                 end
-            },
-            { 
-                type = "client",
-                event = "mh-trailers:client:toggleDoor",
-                icon = "fas fa-car",
-                label = Lang:t('target.ramp_down'),
-                canInteract = function(entity, distance, data)
-                    if platformIsDown then return false end
-                    if rampIsOpen then return false end
-                    if not IsTrailer(entity) then return false end
-                    currentTrailer = entity
-                    CanInterAct(GetEntityModel(currentTrailer))
-                    return true
+                if not rampIsOpen then
+                    return false
                 end
-            },
-            -- platform
-            { 
-                type = "client",
-                event = "mh-trailers:client:togglePlatform",
-                icon = "fas fa-car",
-                label = Lang:t('target.platform_up'),
-                canInteract = function(entity, distance, data)
-                    if not rampIsOpen then return false end
-                    if not platformIsDown then return false end
-                    if platformDoorNumber == nil then return end
-                    if not IsTrailer(entity) then return false end
-                    currentTrailer = entity
-                    return true
+                if not IsTrailer(entity) then
+                    return false
                 end
-            },
-            { 
-                type = "client",
-                event = "mh-trailers:client:togglePlatform",
-                icon = "fas fa-car",
-                label = Lang:t('target.platform_down'),
-                canInteract = function(entity, distance, data)
-                    if not rampIsOpen then return false end
-                    if platformIsDown then return false end
-                    if platformDoorNumber == nil then return end
-                    if not IsTrailer(entity) then return false end
-                    currentTrailer = entity
-                    return true
+                currentTrailer = entity
+                return true
+            end
+        }, {
+            type = "client",
+            event = "mh-trailers:client:toggleDoor",
+            icon = "fas fa-car",
+            label = Lang:t('target.ramp_down'),
+            canInteract = function(entity, distance, data)
+                if platformIsDown then
+                    return false
                 end
-            },
-            { 
-                type = "client",
-                icon = "fas fa-car",
-                label = Lang:t('target.place_ramp'),
-                action = function(entity)
-                    rarmPlaced = true
-                    SpawnRamp(entity)
-                end,
-                canInteract = function(entity, distance, data)
-                    if rarmPlaced then return false end
-                    if not IsTrailer(entity) then return false end
-                    if not Config.TrailerSettings[GetEntityModel(entity)].hasRamp then return false end
-                    currentTrailer = entity
-                    return true
+                if rampIsOpen then
+                    return false
                 end
-            },
-            { 
-                type = "client",
-                icon = "fas fa-car",
-                label = Lang:t('target.lock_trailer'),
-                action = function(entity)
-                    rarmPlaced = true
-                    LockVehiclesOnTrailer(entity)
-                end,
-                canInteract = function(entity, distance, data)
-                    if not IsTrailer(entity) then return false end
-                    return true
+                if not IsTrailer(entity) then
+                    return false
                 end
-            },
-            { 
-                type = "client",
-                icon = "fas fa-car",
-                label = Lang:t('target.unlock_trailer'),
-                action = function(entity)
-                    rarmPlaced = true
-                    UnLockVehiclesOnTrailer(entity)
-                end,
-                canInteract = function(entity, distance, data)
-                    if not IsTrailer(entity) then return false end
-                    return true
+                currentTrailer = entity
+                CanInterAct(GetEntityModel(currentTrailer))
+                return true
+            end
+        }, -- platform
+        {
+            type = "client",
+            event = "mh-trailers:client:togglePlatform",
+            icon = "fas fa-car",
+            label = Lang:t('target.platform_up'),
+            canInteract = function(entity, distance, data)
+                if not rampIsOpen then
+                    return false
                 end
-            },
-        },
-        distance = 5.0 
+                if not platformIsDown then
+                    return false
+                end
+                if platformDoorNumber == nil then
+                    return
+                end
+                if not IsTrailer(entity) then
+                    return false
+                end
+                currentTrailer = entity
+                return true
+            end
+        }, {
+            type = "client",
+            event = "mh-trailers:client:togglePlatform",
+            icon = "fas fa-car",
+            label = Lang:t('target.platform_down'),
+            canInteract = function(entity, distance, data)
+                if not rampIsOpen then
+                    return false
+                end
+                if platformIsDown then
+                    return false
+                end
+                if platformDoorNumber == nil then
+                    return
+                end
+                if not IsTrailer(entity) then
+                    return false
+                end
+                currentTrailer = entity
+                return true
+            end
+        }, {
+            type = "client",
+            icon = "fas fa-car",
+            label = Lang:t('target.place_ramp'),
+            action = function(entity)
+                rarmPlaced = true
+                SpawnRamp(entity)
+            end,
+            canInteract = function(entity, distance, data)
+                if rarmPlaced then
+                    return false
+                end
+                if not IsTrailer(entity) then
+                    return false
+                end
+                if not Config.TrailerSettings[GetEntityModel(entity)].hasRamp then
+                    return false
+                end
+                currentTrailer = entity
+                return true
+            end
+        }, {
+            type = "client",
+            icon = "fas fa-car",
+            label = Lang:t('target.lock_trailer'),
+            action = function(entity)
+                rarmPlaced = true
+                LockVehiclesOnTrailer(entity)
+            end,
+            canInteract = function(entity, distance, data)
+                if not IsTrailer(entity) then
+                    return false
+                end
+                return true
+            end
+        }, {
+            type = "client",
+            icon = "fas fa-car",
+            label = Lang:t('target.unlock_trailer'),
+            action = function(entity)
+                rarmPlaced = true
+                UnLockVehiclesOnTrailer(entity)
+            end,
+            canInteract = function(entity, distance, data)
+                if not IsTrailer(entity) then
+                    return false
+                end
+                return true
+            end
+        }},
+        distance = 5.0
     })
 end
 
@@ -644,7 +706,7 @@ local function DisplayHelpText(text)
 end
 
 AddEventHandler('QBCore:Client:OnPlayerLoaded', function()
-    --TriggerServerEvent("mh-trailers:server:onjoin")
+    -- TriggerServerEvent("mh-trailers:server:onjoin")
     trailers = {}
     LoadTarget()
     createPed()
@@ -692,33 +754,36 @@ end)
 RegisterNetEvent('mh-trailers:client:TruckAndTrailerMenu', function()
     local truckModels = {}
     for key, v in pairs(Config.Models.trucks) do
-        truckModels[#truckModels + 1] = {value = v, text = Lang:t('menu.truck').." "..v}
+        truckModels[#truckModels + 1] = {
+            value = v,
+            text = Lang:t('menu.truck') .. " " .. v
+        }
     end
 
     local trailerModels = {}
     for key, v in pairs(Config.Models.trailers) do
-        trailerModels[#trailerModels + 1] = {value = v, text = Lang:t('menu.trailer').." "..v}
+        trailerModels[#trailerModels + 1] = {
+            value = v,
+            text = Lang:t('menu.trailer') .. " " .. v
+        }
     end
 
     local menu = exports["qb-input"]:ShowInput({
         header = Lang:t('menu.select_header'),
         submitText = "",
-        inputs = {
-            {
-                text = Lang:t('menu.select_truck'),
-                name = "truck",
-                type = "select",
-                options = truckModels,
-                isRequired = true
-            },
-            {
-                text = Lang:t('menu.select_trailer'),
-                name = "trailer",
-                type = "select",
-                options = trailerModels,
-                isRequired = true
-            }
-        }
+        inputs = {{
+            text = Lang:t('menu.select_truck'),
+            name = "truck",
+            type = "select",
+            options = truckModels,
+            isRequired = true
+        }, {
+            text = Lang:t('menu.select_trailer'),
+            name = "trailer",
+            type = "select",
+            options = trailerModels,
+            isRequired = true
+        }}
     })
     if menu then
         if not menu.truck and not menu.trailer then
@@ -751,20 +816,29 @@ end)
 RegisterNetEvent('mh-trailers:client:updateTrailers', function(trailerNetID, vehicleList)
     if trailerNetID ~= nil then
         local tPlate = QBCore.Functions.GetPlate(NetToVeh(trailerNetID))
-        if trailers[tPlate] == nil then trailers[tPlate] = {} end
+        if trailers[tPlate] == nil then
+            trailers[tPlate] = {}
+        end
         for _, vehicles in pairs(vehicleList) do
             if vehicles ~= nil then
                 for _, vehicle in pairs(vehicles) do
                     local tmpVeh = NetToVeh(vehicle)
                     local vPlate = QBCore.Functions.GetPlate(tmpVeh)
                     if not isVehicleLoaded(tmpVeh) then
-                        trailers[tPlate][#trailers[tPlate] + 1] = {vehicle = tmpVeh, plate = vPlate}
+                        trailers[tPlate][#trailers[tPlate] + 1] = {
+                            vehicle = tmpVeh,
+                            plate = vPlate
+                        }
                         AddVehicleToTrailer(NetToVeh(trailerNetID), NetToVeh(vehicle))
                     end
                 end
             end
         end
-        if Config.DebugTrailers then print(json.encode(trailers, {indent = true})) end
+        if Config.DebugTrailers then
+            print(json.encode(trailers, {
+                indent = true
+            }))
+        end
     end
 end)
 
@@ -799,23 +873,27 @@ RegisterNetEvent('mh-trailers:client:getin', function(data)
 end)
 
 CreateThread(function()
-	while true do
+    while true do
         Wait(0)
         local ped = PlayerPedId()
         if IsPedInAnyVehicle(ped) then
             local vehicle = GetVehiclePedIsIn(ped, false)
             local model = GetDisplayNameFromVehicleModel(GetEntityModel(vehicle))
-            --print(model)
+            -- print(model)
             if not Config.IgnoreVehicle[GetEntityModel(vehicle)] then
                 if currentTrailer ~= nil then
                     if currentTrailer ~= vehicle then
                         if IsEntityTouchingEntity(currentTrailer, vehicle) then
                             if IsThisModelABoat(GetEntityModel(vehicle)) then -- is a boattrailer
                                 if GetEntityModel(currentTrailer) == 524108981 then
-                                    DisplayHelpText(Lang:t('info.press_boat_message', {key = Config.AttacheKeyTxt}))
+                                    DisplayHelpText(Lang:t('info.press_boat_message', {
+                                        key = Config.AttacheKeyTxt
+                                    }))
                                 end
                             else
-                                DisplayHelpText(Lang:t('info.press_other_message', {key = Config.AttacheKeyTxt}))
+                                DisplayHelpText(Lang:t('info.press_other_message', {
+                                    key = Config.AttacheKeyTxt
+                                }))
                             end
                         end
                         if IsControlJustPressed(0, Config.AttachedKey) then
@@ -834,10 +912,13 @@ CreateThread(function()
             end
             local playerCoords = GetEntityCoords(ped)
             local garageCoords = Config.Rent.spawn.garage
-            local distance = #(vector3(playerCoords.x, playerCoords.y, playerCoords.z) - vector3(garageCoords.x, garageCoords.y, garageCoords.z))
+            local distance = #(vector3(playerCoords.x, playerCoords.y, playerCoords.z) -
+                                 vector3(garageCoords.x, garageCoords.y, garageCoords.z))
             if distance <= 3.0 then
-                DisplayHelpText(Lang:t('info.press_to_park', {key = Config.AttacheKeyTxt}))
-                if IsControlJustPressed(0, Config.AttachedKey) then    
+                DisplayHelpText(Lang:t('info.press_to_park', {
+                    key = Config.AttacheKeyTxt
+                }))
+                if IsControlJustPressed(0, Config.AttachedKey) then
                     TriggerEvent('qb-trailers:client:park')
                 end
             end
