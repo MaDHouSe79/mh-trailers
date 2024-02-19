@@ -2,6 +2,8 @@ Config = {}
 Config.AttachedKey = 38     -- 38 = E
 Config.AttacheKeyTxt = "E"  -- if AttachedKey = 38 this is E
 
+Config.Target = "qb-target" -- qb-target or ox_target
+
 Config.Models = {
     trucks = {'hauler'},
     trailers = {'tr2', 'trailersmall', 'boattrailer', 'trflat'},
