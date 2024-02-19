@@ -1,6 +1,7 @@
 --[[ ===================================================== ]] --
 --[[             MH Trailers Script by MaDHouSe            ]] --
 --[[ ===================================================== ]] --
+
 local QBCore = exports['qb-core']:GetCoreObject()
 local rampDoornumber = nil -- 5 ramp
 local platformDoorNumber = nil -- 4 platform
@@ -11,6 +12,7 @@ local currentTrailerPlate = nil
 local rampIsOpen = false
 local platformIsDown = false
 local rampPlaced = false
+
 local isInArea = false
 local hasNotify = false
 local trailers = {}
@@ -435,6 +437,9 @@ local function CanInterAct(model)
 end
 
 local function GetIn(entity)
+    if Config.Target == "ox_target" then
+        exports.ox_target:removeModel(entity, 'getin')
+    end
     TaskWarpPedIntoVehicle(PlayerPedId(), entity, -1)
     FreezeEntityPosition(entity, false)
     SetVehicleHandbrake(entity, false)
@@ -544,6 +549,8 @@ local function LoadTarget()
                         GetIn(data.entity)
                     end,
                     canInteract = function(entity, distance, data)
+                        if currentTrailer == nil then return false end
+                        if IsTrailer(entity) then return false end
                         return true
                     end,
                     distance = 15.0
@@ -835,7 +842,6 @@ end)
 AddEventHandler('onResourceStop', function(resource)
     if resource == GetCurrentResourceName() then
         trailers = {}
-        LoadTarget()
         deletePed()
         deleteBlip()
     end
