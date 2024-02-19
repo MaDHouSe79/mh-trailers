@@ -63,7 +63,7 @@
 
 ## Dependencies:
 - [qb-core](https://github.com/qbcore-framework/qb-core) (Required)
-- [qb-target](https://github.com/BerkieBb/qb-target) (Required)
+- [qb-target](https://github.com/BerkieBb/qb-target) or [ox_target](https://github.com/overextended/ox_target) (Required)
 
 
 ## 🙈 Youtube
