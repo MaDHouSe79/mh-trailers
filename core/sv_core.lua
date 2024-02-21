@@ -24,7 +24,7 @@ if Config.Framework == 'esx' then
         local vehicles = {}
         MySQL.Async.fetchAll("SELECT * FROM vehicles", {}, function(rs)
             for k, v in pairs(rs) do
-                vehicles[#vehicles + 1] = {name = v.name, model = v.model}
+                vehicles[#vehicles + 1] = {model = v.model}
             end
             cb(vehicles)
         end)
