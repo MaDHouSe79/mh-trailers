@@ -27,6 +27,7 @@ local entityEnumerator = {
     end
 }
 
+
 local function DisplayHelpText(text)
     SetTextComponentFormat('STRING')
     AddTextComponentString(text)
@@ -43,6 +44,14 @@ local function Park()
         local plate = GetPlate(veh)
         TriggerEvent('mh-vehiclekeyitem:client:DeleteKey', plate)
     end
+end
+
+local function GetIn(entity)
+    TaskWarpPedIntoVehicle(PlayerPedId(), entity, -1)
+    FreezeEntityPosition(entity, false)
+    SetVehicleHandbrake(entity, false)
+    DetachEntity(entity, true, true)
+    SetVehicleEngineOn(entity, true, true)
 end
 
 local function createGarage()
@@ -167,32 +176,67 @@ local function IsTrailer(entity)
     return isTrailer
 end
 
+local function RemoveVehicleModelFromTarget(model, id)
+    if Config.Target == "ox_target" then
+        exports.ox_target:removeModel(model, id)
+    elseif Config.Target == "qb-target" then
+        exports['qb-target']:RemoveTargetModel(model, id)
+    end
+end
+
+local function AddVehicleModelToTarGet(model, id)
+    if Config.Target == "qb-target" then
+        exports['qb-target']:AddTargetModel(model, {
+            options = {{
+                name = id,
+                type = "client",
+                event = "mh-trailers:client:getin",
+                icon = "fas fa-car",
+                label = String('get_in'),
+                action = function(entity)
+                    GetIn(entity)
+                end,
+                canInteract = function(entity, distance, data)
+                    if currentTrailer == nil then return false end
+                    if IsTrailer(entity) then return false end
+                    return true
+                end
+            }},
+            distance = 15.0
+        })
+    elseif Config.Target == "ox_target" then
+        exports.ox_target:addModel(model, {{
+            name = id,
+            icon = "fas fa-car",
+            label = String('get_in'),
+            onSelect = function(data)
+                GetIn(data.entity)
+            end,
+            canInteract = function(entity, distance, data)
+                if currentTrailer == nil then return false end
+                if IsTrailer(entity) then return false end
+                return true
+            end,
+            distance = 15.0
+        }})
+    end
+end
+
 local function AddVehicleToTrailer(trailer, vehicle)
     if trailer ~= nil then
-        if isVehicleLoaded(vehicle) then
-            return
-        end
+        if isVehicleLoaded(vehicle) then return end
         local tPlate = GetPlate(trailer)
         local vPlate = GetPlate(vehicle)
-        if trailers[tPlate] == nil then
-            trailers[tPlate] = {}
-        end
-        trailers[tPlate][#trailers[tPlate] + 1] = {
-            vehicle = vehicle,
-            plate = vPlate
-        }
-        if Config.DebugTrailers then
-            print(json.encode(trailers, {indent = true}))
-        end
+        if trailers[tPlate] == nil then trailers[tPlate] = {} end
+        trailers[tPlate][#trailers[tPlate] + 1] = {vehicle = vehicle, plate = vPlate}
+        if Config.DebugTrailers then print(json.encode(trailers, {indent = true})) end
     end
 end
 
 local function RemoveVehicleFromTrailer(vehicle)
     if currentTrailer ~= nil then
         local tPlate = GetPlate(currentTrailer)
-        if not isVehicleLoaded(vehicle) then
-            return
-        end
+        if not isVehicleLoaded(vehicle) then return end
         if trailers[tPlate] then
             for i = 1, #trailers[tPlate] do
                 local data = trailers[tPlate][i]
@@ -205,11 +249,7 @@ local function RemoveVehicleFromTrailer(vehicle)
             end
             trailers[tPlate] = {}
         end
-        if Config.DebugTrailers then
-            print(json.encode(trailers, {
-                indent = true
-            }))
-        end
+        if Config.DebugTrailers then print(json.encode(trailers, {indent = true})) end
     end
 end
 
@@ -220,10 +260,7 @@ local function EnumerateEntities(initFunc, moveFunc, disposeFunc)
             disposeFunc(iter)
             return
         end
-        local enum = {
-            handle = iter,
-            destructor = disposeFunc
-        }
+        local enum = { handle = iter, destructor = disposeFunc }
         setmetatable(enum, entityEnumerator)
         local next = true
         repeat
@@ -327,9 +364,7 @@ local function LockVehiclesOnTrailer(trailer)
                             local vehRotation = GetEntityRotation(car)
                             local localcoords = GetOffsetFromEntityGivenWorldCoords(trailer, GetEntityCoords(car))
                             local trailerData = GetTrailerData(trailer)
-                            AttachVehicleOnToTrailer(car, trailer, 0.0, 0.0, 0.0, localcoords.x + trailerData.offsetX,
-                                localcoords.y + trailerData.offsetY, localcoords.z + trailerData.offsetZ, vehRotation.x,
-                                vehRotation.y, 0.0, false)
+                            AttachVehicleOnToTrailer(car, trailer, 0.0, 0.0, 0.0, localcoords.x + trailerData.offsetX, localcoords.y + trailerData.offsetY, localcoords.z + trailerData.offsetZ, vehRotation.x, vehRotation.y, 0.0, false)
                             SetEntityCanBeDamaged(car, false)
                             AddVehicleToTrailer(trailer, car)
                             Wait(100)
@@ -348,16 +383,13 @@ local function AddVehicleOnTrailer(trailer)
             SetVehicleEngineOn(car, false, false, true)
             -- (boattrailer) or (trailersmall)
             if GetEntityModel(trailer) == 524108981 or GetEntityModel(trailer) == 712162987 then
-                AttachEntityToEntity(car, trailer, 20, 0.0, -1.0, 0.25, 0.0, 0.0, 0.0, false, false, true, false, 20,
-                    true)
+                AttachEntityToEntity(car, trailer, 20, 0.0, -1.0, 0.25, 0.0, 0.0, 0.0, false, false, true, false, 20, true)
                 -- tr2 trailer
             elseif GetEntityModel(trailer) == 2078290630 then
                 local vehRotation = GetEntityRotation(car)
                 local localcoords = GetOffsetFromEntityGivenWorldCoords(trailer, GetEntityCoords(car))
                 local trailerData = GetTrailerData(trailer)
-                AttachVehicleOnToTrailer(car, trailer, 0.0, 0.0, 0.0, localcoords.x + trailerData.offsetX,
-                    localcoords.y + trailerData.offsetY, localcoords.z + trailerData.offsetZ, vehRotation.x,
-                    vehRotation.y, 0.0, false)
+                AttachVehicleOnToTrailer(car, trailer, 0.0, 0.0, 0.0, localcoords.x + trailerData.offsetX, localcoords.y + trailerData.offsetY, localcoords.z + trailerData.offsetZ, vehRotation.x, vehRotation.y, 0.0, false)
                 -- trflat (only a ramp)
             elseif GetEntityModel(trailer) == -1352468814 then
                 AttachToTrailer(trailer, car)
@@ -365,7 +397,7 @@ local function AddVehicleOnTrailer(trailer)
                 AttachToTrailer(trailer, car)
             end
             SetEntityCanBeDamaged(car, false)
-            TriggerServerEvent('mh-trailers:server:addvehicle', VehToNet(trailer), VehToNet(car))
+            TriggerServerEvent('mh-trailers:server:addvehicle', VehToNet(trailer), VehToNet(car))        
         else
             Notify(Lang:t('notify.already_on_trailer'))
         end
@@ -383,14 +415,6 @@ local function CanInterAct(model)
             end
         end
     end
-end
-
-local function GetIn(entity)
-    TaskWarpPedIntoVehicle(PlayerPedId(), entity, -1)
-    FreezeEntityPosition(entity, false)
-    SetVehicleHandbrake(entity, false)
-    DetachEntity(entity, true, true)
-    SetVehicleEngineOn(entity, true, true)
 end
 
 local function ToggleDoor()
@@ -465,45 +489,13 @@ end
 
 local function LoadTarget()
     -- target for all vehicles
+
     local SharedVehicles = GetVehicles()
-    
-    for k, vehicle in pairs(SharedVehicles) do
-        if Config.Target == "qb-target" then
-            exports['qb-target']:AddTargetModel(k, {
-                options = {{
-                    type = "client",
-                    event = "mh-trailers:client:getin",
-                    icon = "fas fa-car",
-                    label = String('get_in'),
-                    action = function(entity)
-                        GetIn(entity)
-                    end,
-                    canInteract = function(entity, distance, data)
-                        if currentTrailer == nil then return false end
-                        if IsTrailer(entity) then return false end
-                        return true
-                    end
-                }},
-                distance = 15.0
-            })
-        elseif Config.Target == "ox_target" then
-            exports.ox_target:removeModel(k, 'getin')
-            exports.ox_target:addModel(k, {{
-                name = 'getin',
-                icon = "fas fa-car",
-                label = String('get_in'),
-                onSelect = function(data)
-                    GetIn(data.entity)
-                end,
-                canInteract = function(entity, distance, data)
-                    if currentTrailer == nil then return false end
-                    if IsTrailer(entity) then return false end
-                    return true
-                end,
-                distance = 15.0
-            }})
-        end
+    for model, vehicle in pairs(SharedVehicles) do
+        RemoveVehicleModelFromTarget(vehicle.model, 'getin')
+        AddVehicleModelToTarGet(vehicle.model, 'getin')
     end
+
     if Config.Target == "qb-target" then
         -- target ramp model
         exports['qb-target']:AddTargetModel(Config.Models.ramp, {
