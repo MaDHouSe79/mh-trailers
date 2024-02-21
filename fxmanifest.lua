@@ -11,7 +11,6 @@ version '1.0.0'
 shared_scripts {
     --'@es_extended/imports.lua',   -- only if you use esx framework
     --'@ox_lib/init.lua',           -- only if you use ex_lib
-    '@qb-core/shared/locale.lua',   -- only if you use qb framework
     '@qb-core/shared/vehicles.lua', -- only if you use qb framework
     'core/mconfig.lua',
     'core/locale.lua',
