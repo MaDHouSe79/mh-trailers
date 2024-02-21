@@ -32,6 +32,7 @@ server_scripts {
     '@oxmysql/lib/MySQL.lua',
     'core/sv_core.lua',
     'server/main.lua',
+    'server/update.lua',
 }
 
 lua54 'yes'
