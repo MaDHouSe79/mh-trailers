@@ -7,7 +7,6 @@ TriggerCallback = nil
 OnPlayerLoaded = nil
 OnPlayerUnload = nil
 IsLoggedIn = false
-SharedVehicles = nil
 
 function LoadModel(model)
     if not HasModelLoaded(model) then
@@ -23,7 +22,7 @@ if Config.Framework == 'esx' then
     TriggerCallback = Framework.TriggerServerCallback
     OnPlayerLoaded = 'esx:playerLoaded'
     OnPlayerUnload = 'esx:playerUnLoaded'
-    SharedVehicles = Framework.Shared.Vehicles
+
     --- GetPlayerData
     function GetPlayerData()
         TriggerCallback('esx:getPlayerData', function(data)
@@ -35,6 +34,12 @@ if Config.Framework == 'esx' then
     function GetMoney()
         TriggerCallback('esx:getPlayerData', function(data)
             return data.money
+        end)
+    end
+
+    function GetVehicles()
+        TriggerCallback('mh-trailers:server:GetVehicles', function(data)
+            return data
         end)
     end
 
@@ -93,7 +98,6 @@ elseif Config.Framework == 'qb' then
     TriggerCallback = Framework.Functions.TriggerCallback
     OnPlayerLoaded = 'QBCore:Client:OnPlayerLoaded'
     OnPlayerUnload = 'QBCore:Client:OnPlayerUnload'
-    SharedVehicles = Framework.Shared.Vehicles
     
     function GetPlayerData()
         return Framework.Functions.GetPlayerData()
@@ -110,6 +114,10 @@ elseif Config.Framework == 'qb' then
 
     function GetPlate(vehicle)
         return GetVehicleNumberPlateTextIndex(vehicle)
+    end
+
+    function GetVehivicles()
+        return Framework.Shared.Vehicles
     end
 
     function SpawnTruck(model, position, heading)
