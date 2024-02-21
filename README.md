@@ -30,7 +30,7 @@
 - [Youtube](https://www.youtube.com/@MaDHouSe79) for videos
 
 # MH-Trailers (QB/ESX)
-- Suppert QB/ESX Framework
+- Support QB/ESX Framework
 - Transport all your vehicles with trailers. 
 - Trailer rent shop build in.
 
@@ -42,7 +42,7 @@
 - ox_lib
 - ox_target
 
-# Supperts (QB/ESX)
+# Support (QB/ESX)
 - ox_lib
 - ox_target
 
