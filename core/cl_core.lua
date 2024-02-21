@@ -116,7 +116,7 @@ elseif Config.Framework == 'qb' then
         return GetVehicleNumberPlateTextIndex(vehicle)
     end
 
-    function GetVehivicles()
+    function GetVehicles()
         return Framework.Shared.Vehicles
     end
 
