@@ -26,11 +26,28 @@
   <img alig src="https://github-profile-trophy.vercel.app/?username=MaDHouSe79&margin-w=15&column=6" />
 </p>
 
+## 🙈 Youtube
+- [Youtube](https://www.youtube.com/@MaDHouSe79) for videos
 
-# MH-Trailers (BETA)
+# MH-Trailers (QB/ESX)
+- Suppert QB/ESX Framework
 - Transport all your vehicles with trailers. 
 - Trailer rent shop build in.
 
+## QB Dependencies
+- qb-target
+- qb-input
+
+## ESX Dependencies
+- ox_lib
+- ox_target
+
+# Supperts (QB/ESX)
+- ox_lib
+- ox_target
+
+## 🎥 Video 👊😁👍
+[![Watch the video]](https://www.youtube.com/watch?v=D1MGNhh1p8E)
 
 # How it works
 - Everyting works with the target eye.
@@ -40,7 +57,6 @@
 - With this the all top vehicles will be locked automaticly.
 - When you have raised the top platform, you can then use the lower platform.
 - which it in this order and it should work fine.
-
 
 # My trailers does not work
 - Make sure you add the right trailer hash key in the config file
@@ -52,22 +68,9 @@
 - if you don't add this vehicle hash in the ignore vehicle in the config file things does wrong and the truck will also be stuck on the trailer,
 - so don't forget this part cause i'm not going to help you fixing your issues if you don't read this file.
 
-
 # Adding new trailers
 - Make sure you add all settings in the config file correctly.
 - cause i'm not going to help adding more trailers, cause it's not that hard to do.
-
-## 🎥 Video 👊😁👍
-[![Watch the video]](https://www.youtube.com/watch?v=D1MGNhh1p8E)
-
-
-## Dependencies:
-- [qb-core](https://github.com/qbcore-framework/qb-core) (Required)
-- [qb-target](https://github.com/BerkieBb/qb-target) or [ox_target](https://github.com/overextended/ox_target) (Required)
-
-
-## 🙈 Youtube
-- [Youtube](https://www.youtube.com/@MaDHouSe79) for videos
 
 # LICENSE
 [GPL LICENSE](./LICENSE)<br />
