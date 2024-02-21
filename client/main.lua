@@ -465,6 +465,8 @@ end
 
 local function LoadTarget()
     -- target for all vehicles
+    local SharedVehicles = GetVehicles()
+    
     for k, vehicle in pairs(SharedVehicles) do
         if Config.Target == "qb-target" then
             exports['qb-target']:AddTargetModel(k, {
