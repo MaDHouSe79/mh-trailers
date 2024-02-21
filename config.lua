@@ -1,13 +1,48 @@
-Config = {}
+--[[ ===================================================== ]] --
+--[[             MH Trailers Script by MaDHouSe            ]] --
+--[[ ===================================================== ]] --
+
 Config.AttachedKey = 38     -- 38 = E
 Config.AttacheKeyTxt = "E"  -- if AttachedKey = 38 this is E
 
-Config.Target = "qb-target" -- qb-target or ox_target
-
 Config.Models = {
-    trucks = {'hauler'},
+    trucks = {'hauler', 'bison', 'sadler'},
     trailers = {'tr2', 'trailersmall', 'boattrailer', 'trflat'},
-    ramp = "imp_prop_flatbed_ramp" -- hash -901038522
+    ramp = "imp_prop_flatbed_ramp"
+}
+
+-- menu vehicle check
+-- this vehicles can use the selected trailers.
+Config.AllowToMerge = {
+    ['hauler'] = {
+        ['tr2'] = true,
+        ['trflat'] = true,
+    },
+    ['bison'] = {
+        ['trailersmall'] = true,
+        ['boattrailer'] = true,
+    },
+    ['sadler'] = {
+        ['trailersmall'] = true,
+        ['boattrailer'] = true,
+    },
+}
+
+Config.Offsets = {
+    ['tr2'] = {
+        ['hauler'] = 7.0,
+    },
+    ['trflat'] = {
+        ['hauler'] = 7.0,
+    },
+    ['boattrailer'] = {
+        ['bison'] = 7.0,
+        ['sadler'] = 7.0,
+    },
+    ['trailersmall'] = {
+        ['bison'] = 6.0,
+        ['sadler'] = 6.0,
+    },
 }
 
 -- Trailer rent shop
