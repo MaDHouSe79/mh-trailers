@@ -9,13 +9,14 @@ description 'MH-Trailers - to use trailers like in real life'
 version '1.0.0'
 
 shared_scripts {
-    --'@es_extended/imports.lua',   -- only if you use esx framework
-    --'@ox_lib/init.lua',           -- only if you use ex_lib
-    '@qb-core/shared/vehicles.lua', -- only if you use qb framework
+    --'@es_extended/imports.lua', -- only if you use esx framework
+    --'@ox_lib/init.lua',         -- only if you use ex_lib
     'core/mconfig.lua',
     'core/locale.lua',
+    'core/vehicles.lua',
     'locales/*.lua',
     'config.lua',
+
 }
 
 client_scripts {
