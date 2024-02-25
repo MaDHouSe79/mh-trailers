@@ -27,7 +27,6 @@ local entityEnumerator = {
     end
 }
 
-
 local function DisplayHelpText(text)
     SetTextComponentFormat('STRING')
     AddTextComponentString(text)
@@ -489,13 +488,10 @@ end
 
 local function LoadTarget()
     -- target for all vehicles
-
-    local SharedVehicles = GetVehicles()
-    for model, vehicle in pairs(SharedVehicles) do
-        RemoveVehicleModelFromTarget(vehicle.model, 'getin')
-        AddVehicleModelToTarGet(vehicle.model, 'getin')
+    for k, v in pairs(Config.Vehicles) do
+        RemoveVehicleModelFromTarget(v.model, 'getin')
+        AddVehicleModelToTarGet(v.model, 'getin')
     end
-
     if Config.Target == "qb-target" then
         -- target ramp model
         exports['qb-target']:AddTargetModel(Config.Models.ramp, {
