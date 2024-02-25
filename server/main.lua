@@ -33,10 +33,6 @@ local function RemoveVehicleFromTrailer(trailerNetId, vehicleNetId)
     TriggerClientEvent('mh-trailers:client:updateTrailers', -1, trailerNetId, trailers)
 end
 
-CreateCallback('mh-trailers:server:GetVehicles', function(source, cb)
-    cb(GetVehivicles())
-end)
-
 CreateCallback("mh-trailers:server:pay", function(source, cb)
     local src = source
     local player = GetPlayer(src)
