@@ -304,7 +304,7 @@ local function SpawnRamp(trailer)
     local heading = GetEntityHeading(trailer)
     local vehRotation = GetEntityRotation(trailer, 5)
     local trailerpos = GetOffsetFromEntityInWorldCoords(trailer, rampOffsetX, rampOffsetY, rampOffsetZ)
-    local ramp = CreateObject(model, coords.x, coords.y, coords.z, true)
+    local ramp = CreateObject(model, coords.x, coords.y, coords.z, true, true, false)
     SetEntityCoords(ramp, vector3(trailerpos.x, trailerpos.y, trailerpos.z), false, false, false, true)
     SetEntityRotation(ramp, vehRotation.x, vehRotation.y, vehRotation.z + rampRotation, 5, true)
 end
