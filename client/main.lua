@@ -16,6 +16,7 @@ local trailers = {}
 local blip = nil
 local tmpTruck = nil
 local tmpTrailer = nil
+local rentPed = nil
 
 local entityEnumerator = {
     __gc = function(enum)
@@ -294,19 +295,22 @@ local function GetTrailerData(trailer)
 end
 
 local function SpawnRamp(trailer)
-    local model = Config.Models.ramp
-    LoadModel(model)
-    local rampOffsetX = Config.TrailerSettings[GetEntityModel(trailer)].ramp.offsetX
-    local rampOffsetY = Config.TrailerSettings[GetEntityModel(trailer)].ramp.offsetY
-    local rampOffsetZ = Config.TrailerSettings[GetEntityModel(trailer)].ramp.offsetZ
-    local rampRotation = Config.TrailerSettings[GetEntityModel(trailer)].ramp.rotation
-    local coords = GetEntityCoords(trailer)
-    local heading = GetEntityHeading(trailer)
-    local vehRotation = GetEntityRotation(trailer, 5)
-    local trailerpos = GetOffsetFromEntityInWorldCoords(trailer, rampOffsetX, rampOffsetY, rampOffsetZ)
-    local ramp = CreateObject(model, coords.x, coords.y, coords.z, true, true, false)
-    SetEntityCoords(ramp, vector3(trailerpos.x, trailerpos.y, trailerpos.z), false, false, false, true)
-    SetEntityRotation(ramp, vehRotation.x, vehRotation.y, vehRotation.z + rampRotation, 5, true)
+    if DoesEntityExist(trailer) then
+        local model = Config.Models.ramp
+        LoadModel(model)
+        local rampOffsetX = Config.TrailerSettings[GetEntityModel(trailer)].ramp.offsetX
+        local rampOffsetY = Config.TrailerSettings[GetEntityModel(trailer)].ramp.offsetY
+        local rampOffsetZ = Config.TrailerSettings[GetEntityModel(trailer)].ramp.offsetZ
+        local rampRotation = Config.TrailerSettings[GetEntityModel(trailer)].ramp.rotation
+        local coords = GetEntityCoords(trailer)
+        local heading = GetEntityHeading(trailer)
+        local vehRotation = GetEntityRotation(trailer, 5)
+        local trailerpos = GetOffsetFromEntityInWorldCoords(trailer, rampOffsetX, rampOffsetY, rampOffsetZ)
+        local ramp = CreateObject(model, coords.x, coords.y, coords.z, true, true, false)
+        SetEntityCoords(ramp, vector3(trailerpos.x, trailerpos.y, trailerpos.z), false, false, false, true)
+        SetEntityRotation(ramp, vehRotation.x, vehRotation.y, vehRotation.z + rampRotation, 5, true)
+        TriggerServerEvent('mh-trailers:server:RegisterRamp', VehToNet(trailer), ObjToNet(ramp))
+    end
 end
 
 local function UnLockVehiclesOnTrailer(trailer)
@@ -616,21 +620,23 @@ local function LoadTarget()
     elseif Config.Target == "ox_target" then
         -- target ramp model
         exports.ox_target:removeModel(Config.Models.ramp, 'ramp')
-        exports.ox_target:addModel(Config.Models.ramp, {{
-            name = 'ramp',
-            icon = "fas fa-car",
-            label = String('remove_ramp'),
-            onSelect = function(data)
-                rampPlaced = false
-                DeleteEntity(data.entity)
-            end,
-            canInteract = function(entity, distance, data)
-                if not rampPlaced then return false end
-                if not Config.TrailerSettings[GetEntityModel(currentTrailer)].hasRamp then return false end
-                return true
-            end,
-            distance = 2.5
-        }})
+        exports.ox_target:addModel(Config.Models.ramp, {
+            {
+                name = 'ramp',
+                icon = "fas fa-car",
+                label = String('remove_ramp'),
+                onSelect = function(data)
+                    rampPlaced = false
+                    DeleteEntity(data.entity)
+                end,
+                canInteract = function(entity, distance, data)
+                    if not rampPlaced then return false end
+                    if not Config.TrailerSettings[GetEntityModel(currentTrailer)].hasRamp then return false end
+                    return true
+                end,
+                distance = 2.5
+            }
+        })
         -- trailer trailers
         exports.ox_target:removeModel(Config.Models.trailers, 'trailer')
         exports.ox_target:addModel(Config.Models.trailers, {
@@ -710,7 +716,7 @@ local function LoadTarget()
                 label = String('place_ramp'),
                 onSelect = function(data)
                     rampPlaced = true
-                    SpawnRamp(data.entity)
+                    TriggerServerEvent('mh-trailers:server:SpawnRamp', VehToNet(data.entity))
                 end,
                 canInteract = function(entity, distance, data)
                     if rampPlaced then return false end
@@ -955,6 +961,11 @@ end)
 
 RegisterNetEvent('mh-trailers:client:toggleDoor', function()
     ToggleDoor()
+end)
+
+RegisterNetEvent('mh-trailers:client:SpawnRamp', function(trailerNetId)
+    local trailer = NetToVeh(trailerNetId)
+    SpawnRamp(trailer)
 end)
 
 RegisterNetEvent('mh-trailers:client:updateTrailers', function(trailerNetID, vehicleList)
