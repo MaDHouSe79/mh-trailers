@@ -37,12 +37,6 @@ if Config.Framework == 'esx' then
         end)
     end
 
-    function GetVehicles()
-        TriggerCallback('mh-trailers:server:GetVehicles', function(data)
-            return data
-        end)
-    end
-
     function DeleteVehicle(vehicle)
         Framework.Game.DeleteVehicle(vehicle)
     end
@@ -66,8 +60,10 @@ if Config.Framework == 'esx' then
         SetVehRadioStation(vehicle, 'OFF')
         SetVehicleEngineHealth(vehicle, 1000.0)
         SetVehicleBodyHealth(vehicle, 1000.0)
-        TriggerServerEvent("qb-vehiclekeys:server:AcquireVehicleKeys", Framework.Functions.GetPlate(vehicle))
-        TriggerEvent('mh-vehiclekeyitem:client:CreateTempKey', vehicle)
+        if Config.Framework == 'qb' then
+            TriggerServerEvent("qb-vehiclekeys:server:AcquireVehicleKeys", Framework.Functions.GetPlate(vehicle))
+            TriggerEvent('mh-vehiclekeyitem:client:CreateTempKey', vehicle)
+        end
         SetModelAsNoLongerNeeded(model)
         return vehicle, plate, heading
     end
@@ -117,7 +113,8 @@ elseif Config.Framework == 'qb' then
     end
 
     function GetVehicles()
-        return Framework.Shared.Vehicles
+        SharedVehicles = Framework.Shared.Vehicles
+        return SharedVehicles
     end
 
     function SpawnTruck(model, position, heading)
