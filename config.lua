@@ -7,7 +7,7 @@ Config.AttacheKeyTxt = "E"  -- if AttachedKey = 38 this is E
 
 Config.Models = {
     trucks = {'hauler', 'bison', 'sadler'},
-    trailers = {'tr2', 'trailersmall', 'boattrailer', 'trflat'},
+    trailers = {'tr2', 'trailersmall', 'boattrailer', 'trflat', 'pjtrailer'},
     ramp = "imp_prop_flatbed_ramp"
 }
 
@@ -17,6 +17,7 @@ Config.AllowToMerge = {
     ['hauler'] = {
         ['tr2'] = true,
         ['trflat'] = true,
+        ['pjtrailer'] = true
     },
     ['bison'] = {
         ['trailersmall'] = true,
@@ -28,6 +29,7 @@ Config.AllowToMerge = {
     },
 }
 
+-- trailer offset spawn position
 Config.Offsets = {
     ['tr2'] = {
         ['hauler'] = 7.0,
