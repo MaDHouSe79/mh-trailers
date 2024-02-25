@@ -731,7 +731,6 @@ local function LoadTarget()
                 icon = "fas fa-car",
                 label = String('lock_trailer'),
                 onSelect = function(data)
-                    rampPlaced = true
                     LockVehiclesOnTrailer(data.entity)
                 end,
                 canInteract = function(entity, distance, data)
@@ -744,7 +743,6 @@ local function LoadTarget()
                 icon = "fas fa-car",
                 label = String('unlock_trailer'),
                 onSelect = function(data)
-                    rampPlaced = true
                     UnLockVehiclesOnTrailer(data.entity)
                 end,
                 canInteract = function(entity, distance, data)
