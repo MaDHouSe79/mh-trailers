@@ -631,7 +631,7 @@ local function LoadTarget()
                 end,
                 canInteract = function(entity, distance, data)
                     if not rampPlaced then return false end
-                    if not Config.TrailerSettings[GetEntityModel(currentTrailer)].hasRamp then return false end
+                    --if not Config.TrailerSettings[GetEntityModel(currentTrailer)].hasRamp then return false end
                     return true
                 end,
                 distance = 2.5
