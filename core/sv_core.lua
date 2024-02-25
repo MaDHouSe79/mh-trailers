@@ -20,16 +20,6 @@ if Config.Framework == 'esx' then
         return Framework.GetPlayerFromId(source)
     end
 
-    function GetVehivicles()
-        local vehicles = {}
-        MySQL.Async.fetchAll("SELECT * FROM vehicles", {}, function(rs)
-            for k, v in pairs(rs) do
-                vehicles[#vehicles + 1] = {model = v.model}
-            end
-            cb(vehicles)
-        end)
-    end
-
     --- Get Money
     ---@param source number
     ---@param account string
@@ -82,9 +72,6 @@ elseif Config.Framework == 'qb' then
         return Framework.Functions.GetPlayer(source)
     end
 
-    function GetVehivicles()
-        return Framework.Shared.Vehicles
-    end
     
     --- Get Money
     ---@param source number
