@@ -49,6 +49,35 @@
 ## 🎥 Video 👊😁👍
 [![Watch the video]](https://www.youtube.com/watch?v=D1MGNhh1p8E)
 
+# NOTE fxmanifest.lua
+- don't forget to edit `fxmanifest.lua` to your server needs.
+
+# ESX fxmanifest.lua
+```conf
+shared_scripts {
+    '@es_extended/imports.lua', -- only if you use esx framework
+    '@ox_lib/init.lua',         -- only if you use ex_lib
+    'core/mconfig.lua',
+    'core/locale.lua',
+    'core/vehicles.lua',
+    'locales/*.lua',
+    'config.lua',
+}
+```
+
+# QBCore fxmanifest.lua
+```conf
+shared_scripts {
+    --'@es_extended/imports.lua', -- only if you use esx framework
+    --'@ox_lib/init.lua',         -- only if you use ex_lib
+    'core/mconfig.lua',
+    'core/locale.lua',
+    'core/vehicles.lua',
+    'locales/*.lua',
+    'config.lua',
+}
+```
+- 
 # How it works
 - Everyting works with the target eye.
 - First you look with target to the trailer, then you get a few options, 
