@@ -70,11 +70,15 @@ AddEventHandler('mh-trailers:server:onjoin', function()
     TriggerClientEvent('mh-trailers:client:onjoin', src, trailers)
 end)
 
-RegisterNetEvent('mh-trailers:server:SpawnRamp')
-AddEventHandler('mh-trailers:server:SpawnRamp', function(source, _trailerNetID, _rampNetID)
+RegisterNetEvent('mh-trailers:server:RegisterRamp')
+AddEventHandler('mh-trailers:server:RegisterRamp', function(source, _trailerNetID, _rampNetID)
     local data = {trailer = _trailerNetID, ramp = _rampNetID}
     if isVehicleLoaded(_trailerNetID, _rampNetID) then return end
-    TriggerClientEvent('mh-trailers:client:SpawnRamp', -1, data)
+end)
+
+RegisterNetEvent('mh-trailers:server:SpawnRamp')
+AddEventHandler('mh-trailers:server:SpawnRamp', function(_trailerNetID)
+    TriggerClientEvent('mh-trailers:client:SpawnRamp', -1, _trailerNetID)
 end)
 
 RegisterNetEvent('mh-trailers:server:updateDoor')
