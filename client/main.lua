@@ -42,7 +42,13 @@ local function Park()
         DeleteVehicle(veh)
         DeleteEntity(GetVehiclePedIsIn(PlayerPedId(), false))
         local plate = GetPlate(veh)
-        TriggerEvent('mh-vehiclekeyitem:client:DeleteKey', plate)
+        if GetResourceState("mh-vehiclekeyitem") == 'missing' then
+            TriggerEvent('vehiclekeys:client:RemoveKeys', GetVehicleNumberPlateText(veh))
+        end
+
+        if GetResourceState("mh-vehiclekeyitem") ~= 'missing' then
+            TriggerEvent('mh-vehiclekeyitem:client:DeleteKey', plate)
+        end
     end
 end
 
@@ -504,7 +510,7 @@ local function LoadTarget()
                 type = "client",
                 event = "mh-trailers:client:deleteRamp",
                 icon = "fas fa-car",
-                label = String(remove_ramp),
+                label = String('remove_ramp'),
                 action = function(entity)
                     rampPlaced = false
                     DeleteEntity(entity)
@@ -524,7 +530,7 @@ local function LoadTarget()
                 type = "client",
                 event = "mh-trailers:client:toggleDoor",
                 icon = "fas fa-car",
-                label = String(ramp_up),
+                label = String('ramp_up'),
                 action = function(entity)
                     TriggerEvent('mh-trailers:client:toggleDoor')
                 end,
@@ -539,7 +545,7 @@ local function LoadTarget()
                 type = "client",
                 event = "mh-trailers:client:toggleDoor",
                 icon = "fas fa-car",
-                label = String(ramp_down),
+                label = String('ramp_down'),
                 canInteract = function(entity, distance, data)
                     if platformIsDown then return false end
                     if rampIsOpen then return false end
@@ -553,7 +559,7 @@ local function LoadTarget()
                 type = "client",
                 event = "mh-trailers:client:togglePlatform",
                 icon = "fas fa-car",
-                label = String(platform_up),
+                label = String('platform_up'),
                 canInteract = function(entity, distance, data)
                     if not rampIsOpen then return false end
                     if not platformIsDown then return false end
@@ -566,7 +572,7 @@ local function LoadTarget()
                 type = "client",
                 event = "mh-trailers:client:togglePlatform",
                 icon = "fas fa-car",
-                label = String(platform_down),
+                label = String('platform_down'),
                 canInteract = function(entity, distance, data)
                     if not rampIsOpen then return false end
                     if platformIsDown then return false end
@@ -576,10 +582,9 @@ local function LoadTarget()
                     return true
                 end
             }, {
-                type = "client",
                 icon = "fas fa-car",
-                label = String(place_ramp),
-                onSelect = function(entity)
+                label = String('place_ramp'),
+                action = function(entity)
                     rampPlaced = true
                     SpawnRamp(entity)
                 end,
@@ -593,8 +598,8 @@ local function LoadTarget()
             }, {
                 type = "client",
                 icon = "fas fa-car",
-                label = String(lock_trailer),
-                onSelect = function(entity)
+                label = String('lock_trailer'),
+                action = function(entity)
                     rampPlaced = true
                     LockVehiclesOnTrailer(entity)
                 end,
@@ -605,8 +610,8 @@ local function LoadTarget()
             }, {
                 type = "client",
                 icon = "fas fa-car",
-                label = String(unlock_trailer),
-                onSelect = function(entity)
+                label = String('unlock_trailer'),
+                action = function(entity)
                     rampPlaced = true
                     UnLockVehiclesOnTrailer(entity)
                 end,
