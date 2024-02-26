@@ -77,7 +77,20 @@ shared_scripts {
     'config.lua',
 }
 ```
-- 
+
+# QBX fxmanifest.lua
+```conf
+shared_scripts {
+    --'@es_extended/imports.lua', -- only if you use esx framework
+    '@ox_lib/init.lua',         -- only if you use ex_lib
+    'core/mconfig.lua',
+    'core/locale.lua',
+    'core/vehicles.lua',
+    'locales/*.lua',
+    'config.lua',
+}
+```
+
 # How it works
 - Everyting works with the target eye.
 - First you look with target to the trailer, then you get a few options, 
