@@ -118,7 +118,7 @@ ensure [defaultmaps]
 ensure mh-trailers
 ```
 
-# QB/QBX Server.cfg
+# ESX Server.cfg
 ```conf
 ensure chat
 ensure spawnmanager
