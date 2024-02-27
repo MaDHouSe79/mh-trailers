@@ -8,15 +8,6 @@ OnPlayerLoaded = nil
 OnPlayerUnload = nil
 IsLoggedIn = false
 
-function LoadModel(model)
-    if not HasModelLoaded(model) then
-        RequestModel(model)
-        while not HasModelLoaded(model) do
-            Citizen.Wait(1)
-        end
-    end
-end
-
 if Config.Framework == 'esx' then
     Framework = exports['es_extended']:getSharedObject()
     TriggerCallback = Framework.TriggerServerCallback
@@ -43,44 +34,6 @@ if Config.Framework == 'esx' then
 
     function GetPlate(vehicle)
         return GetVehicleNumberPlateTextIndex(vehicle)
-    end
-
-    function SpawnTruck(model, position, heading)
-        LoadModel(model)
-        local vehicle = CreateVehicle(model, position, heading, true, true)
-        local plate = 'T' .. string.format('%06d', math.random(1, 999))
-        SetEntityAsMissionEntity(vehicle, true, true)
-        SetVehicleNumberPlateText(vehicle, plate)
-        SetEntityHeading(vehicle, heading)
-        exports[Config.FuelScript]:SetFuel(vehicle, 100.0)
-        SetVehicleOnGroundProperly(vehicle)
-        TaskWarpPedIntoVehicle(PlayerPedId(), vehicle, -1)
-        SetVehicleCustomPrimaryColour(vehicle, 0, 0, 0)
-        SetVehicleDirtLevel(vehicle, 0)
-        WashDecalsFromVehicle(vehicle, 1.0)
-        SetVehRadioStation(vehicle, 'OFF')
-        SetVehicleEngineHealth(vehicle, 1000.0)
-        SetVehicleBodyHealth(vehicle, 1000.0)
-        SetModelAsNoLongerNeeded(model)
-        return vehicle, plate, heading
-    end
-    
-    function SpawnTrailer(model, position, heading)
-        LoadModel(model)
-        local vehicle = CreateVehicle(model, position, heading, true, true)
-        local plate = 'TR' .. string.format('%06d', math.random(1, 999))
-        SetEntityAsMissionEntity(vehicle, true, true)
-        SetVehicleNumberPlateText(vehicle, plate)
-        SetEntityHeading(vehicle, heading)
-        SetVehicleOnGroundProperly(vehicle)
-        TaskWarpPedIntoVehicle(PlayerPedId(), vehicle, -1)
-        SetVehicleCustomPrimaryColour(vehicle, 0, 0, 0)
-        SetVehicleDirtLevel(vehicle, 0)
-        WashDecalsFromVehicle(vehicle, 1.0)
-        SetVehRadioStation(vehicle, 'OFF')
-        SetVehicleEngineHealth(vehicle, 1000.0)
-        SetVehicleBodyHealth(vehicle, 1000.0)
-        return vehicle, plate
     end
 
     function Notify(message, type, time)
@@ -115,49 +68,60 @@ elseif Config.Framework == 'qb' then
         return SharedVehicles
     end
 
-    function SpawnTruck(model, position, heading)
-        LoadModel(model)
-        local vehicle = CreateVehicle(model, position, heading, true, false)
-        local plate = 'T' .. string.format('%06d', math.random(1, 999))
-        SetEntityAsMissionEntity(vehicle, true, true)
-        SetVehicleNumberPlateText(vehicle, plate)
-        SetEntityHeading(vehicle, heading)
-        exports[Config.FuelScript]:SetFuel(vehicle, 100.0)
-        SetVehicleOnGroundProperly(vehicle)
-        TaskWarpPedIntoVehicle(PlayerPedId(), vehicle, -1)
-        SetVehicleCustomPrimaryColour(vehicle, 0, 0, 0)
-        SetVehicleDirtLevel(vehicle, 0)
-        WashDecalsFromVehicle(vehicle, 1.0)
-        SetVehRadioStation(vehicle, 'OFF')
-        SetVehicleEngineHealth(vehicle, 1000.0)
-        SetVehicleBodyHealth(vehicle, 1000.0)
-        TriggerServerEvent("qb-vehiclekeys:server:AcquireVehicleKeys", Framework.Functions.GetPlate(vehicle))
-        if GetResourceState("mh-vehiclekeyitem") ~= 'missing' then
-            TriggerEvent('mh-vehiclekeyitem:client:CreateTempKey', vehicle)
-        end
-        SetModelAsNoLongerNeeded(model)
-        return vehicle, plate
-    end
-    
-    function SpawnTrailer(model, position, heading)
-        LoadModel(model)
-        local vehicle = CreateVehicle(model, position, heading, true, false)
-        local plate = 'TR' .. string.format('%06d', math.random(1, 999))
-        SetEntityAsMissionEntity(vehicle, true, true)
-        SetVehicleNumberPlateText(vehicle, plate)
-        SetEntityHeading(vehicle, heading)
-        SetVehicleOnGroundProperly(vehicle)
-        TaskWarpPedIntoVehicle(PlayerPedId(), vehicle, -1)
-        SetVehicleCustomPrimaryColour(vehicle, 0, 0, 0)
-        SetVehicleDirtLevel(vehicle, 0)
-        WashDecalsFromVehicle(vehicle, 1.0)
-        SetVehRadioStation(vehicle, 'OFF')
-        SetVehicleEngineHealth(vehicle, 1000.0)
-        SetVehicleBodyHealth(vehicle, 1000.0)
-        return vehicle, plate
-    end
-
     function Notify(message, type, length)
         Framework.Functions.Notify({text = Config.NotifyTitle, caption = message}, type, length)
     end
+end
+
+function LoadModel(model)
+    if not HasModelLoaded(model) then
+        RequestModel(model)
+        while not HasModelLoaded(model) do
+            Citizen.Wait(1)
+        end
+    end
+end
+
+function SpawnTruck(model, position, heading)
+    LoadModel(model)
+    local vehicle = CreateVehicle(model, position, heading, true, false)
+    local plate = 'T' .. string.format('%06d', math.random(1, 999))
+    SetEntityAsMissionEntity(vehicle, true, true)
+    SetVehicleNumberPlateText(vehicle, plate)
+    SetEntityHeading(vehicle, heading)
+    exports[Config.FuelScript]:SetFuel(vehicle, 100.0)
+    SetVehicleOnGroundProperly(vehicle)
+    TaskWarpPedIntoVehicle(PlayerPedId(), vehicle, -1)
+    SetVehicleCustomPrimaryColour(vehicle, 0, 0, 0)
+    SetVehicleDirtLevel(vehicle, 0)
+    WashDecalsFromVehicle(vehicle, 1.0)
+    SetVehRadioStation(vehicle, 'OFF')
+    SetVehicleEngineHealth(vehicle, 1000.0)
+    SetVehicleBodyHealth(vehicle, 1000.0)
+    if GetResourceState("qb-vehiclekeys") ~= 'missing' then
+        TriggerServerEvent("qb-vehiclekeys:server:AcquireVehicleKeys", Framework.Functions.GetPlate(vehicle))
+    end
+    if GetResourceState("mh-vehiclekeyitem") ~= 'missing' then
+        TriggerEvent('mh-vehiclekeyitem:client:CreateTempKey', vehicle)
+    end
+    SetModelAsNoLongerNeeded(model)
+    return vehicle, plate
+end
+
+function SpawnTrailer(model, position, heading)
+    LoadModel(model)
+    local vehicle = CreateVehicle(model, position, heading, true, false)
+    local plate = 'TR' .. string.format('%06d', math.random(1, 999))
+    SetEntityAsMissionEntity(vehicle, true, true)
+    SetVehicleNumberPlateText(vehicle, plate)
+    SetEntityHeading(vehicle, heading)
+    SetVehicleOnGroundProperly(vehicle)
+    TaskWarpPedIntoVehicle(PlayerPedId(), vehicle, -1)
+    SetVehicleCustomPrimaryColour(vehicle, 0, 0, 0)
+    SetVehicleDirtLevel(vehicle, 0)
+    WashDecalsFromVehicle(vehicle, 1.0)
+    SetVehRadioStation(vehicle, 'OFF')
+    SetVehicleEngineHealth(vehicle, 1000.0)
+    SetVehicleBodyHealth(vehicle, 1000.0)
+    return vehicle, plate
 end
