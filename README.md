@@ -47,7 +47,7 @@
 - ox_target
 
 ## 🎥 Video 👊😁👍
-[![Watch the video]](https://www.youtube.com/watch?v=D1MGNhh1p8E)
+[Watch the video](https://www.youtube.com/watch?v=D1MGNhh1p8E)
 
 # NOTE fxmanifest.lua
 - don't forget to edit `fxmanifest.lua` to your server needs.
