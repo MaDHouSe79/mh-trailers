@@ -92,6 +92,12 @@ function LoadModel(model)
     end
 end
 
+function DisplayHelpText(text)
+    SetTextComponentFormat('STRING')
+    AddTextComponentString(text)
+    DisplayHelpTextFromStringLabel(0, 0, 1, -1)
+end
+
 function SpawnTruck(model, position, heading)
     LoadModel(model)
     local vehicle = CreateVehicle(model, position, heading, true, false)
