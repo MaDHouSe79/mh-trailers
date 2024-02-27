@@ -91,6 +91,59 @@ shared_scripts {
 }
 ```
 
+# QB/QBX Server.cfg
+```conf
+ensure mapmanager
+ensure chat
+ensure spawnmanager
+ensure sessionmanager
+ensure basic-gamemode
+ensure hardcap
+ensure baseevents
+ensure oxmysql
+
+ensure ox_lib
+
+# QBCore & Extra stuff
+ensure qb-core
+ensure [qb]
+
+ensure ox_target
+ensure mh-syncfuel
+
+ensure [standalone]
+ensure [voice]
+ensure [defaultmaps]
+
+ensure mh-trailers
+```
+
+# QB/QBX Server.cfg
+```conf
+ensure chat
+ensure spawnmanager
+ensure hardcap
+ensure oxmysql
+ensure bob74_ipl
+
+ensure ox_lib
+# ESX Legacy Core
+# ----------
+ensure [core]
+
+# ESX Addons
+# ----------
+ensure PolyZone
+ensure mh-trailers
+
+ensure [standalone]
+ensure [esx_addons]
+
+# Additional Resource
+# -------------------
+ensure pma-voice
+```
+
 # How it works
 - Everyting works with the target eye.
 - First you look with target to the trailer, then you get a few options, 
