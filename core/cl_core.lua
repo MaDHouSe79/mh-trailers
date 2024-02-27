@@ -49,6 +49,7 @@ if Config.Framework == 'esx' then
         LoadModel(model)
         local vehicle = CreateVehicle(model, position, heading, true, true)
         local plate = 'T' .. string.format('%06d', math.random(1, 999))
+        SetEntityAsMissionEntity(vehicle, true, true)
         SetVehicleNumberPlateText(vehicle, plate)
         SetEntityHeading(vehicle, heading)
         exports[Config.FuelScript]:SetFuel(vehicle, 100.0)
@@ -60,10 +61,6 @@ if Config.Framework == 'esx' then
         SetVehRadioStation(vehicle, 'OFF')
         SetVehicleEngineHealth(vehicle, 1000.0)
         SetVehicleBodyHealth(vehicle, 1000.0)
-        if Config.Framework == 'qb' then
-            TriggerServerEvent("qb-vehiclekeys:server:AcquireVehicleKeys", Framework.Functions.GetPlate(vehicle))
-            TriggerEvent('mh-vehiclekeyitem:client:CreateTempKey', vehicle)
-        end
         SetModelAsNoLongerNeeded(model)
         return vehicle, plate, heading
     end
@@ -72,6 +69,7 @@ if Config.Framework == 'esx' then
         LoadModel(model)
         local vehicle = CreateVehicle(model, position, heading, true, true)
         local plate = 'TR' .. string.format('%06d', math.random(1, 999))
+        SetEntityAsMissionEntity(vehicle, true, true)
         SetVehicleNumberPlateText(vehicle, plate)
         SetEntityHeading(vehicle, heading)
         SetVehicleOnGroundProperly(vehicle)
@@ -121,6 +119,7 @@ elseif Config.Framework == 'qb' then
         LoadModel(model)
         local vehicle = CreateVehicle(model, position, heading, true, false)
         local plate = 'T' .. string.format('%06d', math.random(1, 999))
+        SetEntityAsMissionEntity(vehicle, true, true)
         SetVehicleNumberPlateText(vehicle, plate)
         SetEntityHeading(vehicle, heading)
         exports[Config.FuelScript]:SetFuel(vehicle, 100.0)
@@ -133,7 +132,9 @@ elseif Config.Framework == 'qb' then
         SetVehicleEngineHealth(vehicle, 1000.0)
         SetVehicleBodyHealth(vehicle, 1000.0)
         TriggerServerEvent("qb-vehiclekeys:server:AcquireVehicleKeys", Framework.Functions.GetPlate(vehicle))
-        TriggerEvent('mh-vehiclekeyitem:client:CreateTempKey', vehicle)
+        if GetResourceState("mh-vehiclekeyitem") ~= 'missing' then
+            TriggerEvent('mh-vehiclekeyitem:client:CreateTempKey', vehicle)
+        end
         SetModelAsNoLongerNeeded(model)
         return vehicle, plate
     end
@@ -142,6 +143,7 @@ elseif Config.Framework == 'qb' then
         LoadModel(model)
         local vehicle = CreateVehicle(model, position, heading, true, false)
         local plate = 'TR' .. string.format('%06d', math.random(1, 999))
+        SetEntityAsMissionEntity(vehicle, true, true)
         SetVehicleNumberPlateText(vehicle, plate)
         SetEntityHeading(vehicle, heading)
         SetVehicleOnGroundProperly(vehicle)
