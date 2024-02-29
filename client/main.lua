@@ -802,7 +802,7 @@ if Config.Menu == "ox_lib" then
 
 elseif Config.Menu == "qb-input" then
 
-    function SelectTruckMent()
+    function SelectTruckMenu()
         local truckModels = {}
         for key, v in pairs(Config.Models.trucks) do
             truckModels[#truckModels + 1] = {
