@@ -32,10 +32,6 @@ if Config.Framework == 'esx' then
         Framework.Game.DeleteVehicle(vehicle)
     end
 
-    function GetPlate(vehicle)
-        return GetVehicleNumberPlateTextIndex(vehicle)
-    end
-
     function Notify(message, type, time)
         Framework.ShowNotification(message, type, time)
     end
@@ -58,11 +54,7 @@ elseif Config.Framework == 'qb' then
     function DeleteVehicle(vehicle)
         Framework.Functions.DeleteVehicle(vehicle)
     end
-
-    function GetPlate(vehicle)
-        return GetVehicleNumberPlateTextIndex(vehicle)
-    end
-
+    
     function GetVehicles()
         SharedVehicles = Framework.Shared.Vehicles
         return SharedVehicles
@@ -82,6 +74,10 @@ local entityEnumerator = {
         enum.handle = nil
     end
 }
+
+function GetPlate(vehicle)
+    return GetVehicleNumberPlateTextIndex(vehicle)
+end
 
 function LoadModel(model)
     if not HasModelLoaded(model) then
@@ -115,7 +111,7 @@ function SpawnTruck(model, position, heading)
     SetVehicleEngineHealth(vehicle, 1000.0)
     SetVehicleBodyHealth(vehicle, 1000.0)
     if GetResourceState("qb-vehiclekeys") ~= 'missing' then
-        TriggerServerEvent("qb-vehiclekeys:server:AcquireVehicleKeys", Framework.Functions.GetPlate(vehicle))
+        TriggerServerEvent("qb-vehiclekeys:server:AcquireVehicleKeys", GetPlate(vehicle))
     end
     if GetResourceState("mh-vehiclekeyitem") ~= 'missing' then
         TriggerEvent('mh-vehiclekeyitem:client:CreateTempKey', vehicle)
