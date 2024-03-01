@@ -25,6 +25,8 @@ local function Park()
         Wait(1500)
         DeleteVehicle(veh)
         DeleteEntity(GetVehiclePedIsIn(PlayerPedId(), false))
+        currentTruck = nil
+        currentTrailer = nil
         local plate = GetPlate(veh)
         if GetResourceState("mh-vehiclekeyitem") == 'missing' then
             TriggerEvent('vehiclekeys:client:RemoveKeys', GetVehicleNumberPlateText(veh))
@@ -124,7 +126,12 @@ local function createPed()
                 icon = 'fa-solid fa-coins',
                 action = function()
                     TriggerEvent('mh-trailers:client:TruckAndTrailerMenu')
-                end
+                end,
+                canInteract = function(entity, distance, data)
+                    if currentTruck ~= nil then return false end
+                    if currentTrailer ~= nil then return false end
+                    return true
+                end,
             }},
             distance = 2.0
         })
@@ -136,6 +143,11 @@ local function createPed()
             label = String('rent_a_vehicle'),
             onSelect = function()
                 TriggerEvent('mh-trailers:client:TruckAndTrailerMenu')
+            end,
+            canInteract = function(entity, distance, data)
+                if currentTruck ~= nil then return false end
+                if currentTrailer ~= nil then return false end
+                return true
             end,
             distance = 2.0
         }})
