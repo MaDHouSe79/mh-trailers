@@ -18,26 +18,6 @@ local tmpTruck = nil
 local tmpTrailer = nil
 local rentPed = nil
 
-local function Park()
-    if IsPedInAnyVehicle(PlayerPedId()) then
-        local veh = GetVehiclePedIsIn(PlayerPedId(), false)
-        TaskLeaveVehicle(PlayerPedId(), veh)
-        Wait(1500)
-        DeleteVehicle(veh)
-        DeleteEntity(GetVehiclePedIsIn(PlayerPedId(), false))
-        currentTruck = nil
-        currentTrailer = nil
-        local plate = GetPlate(veh)
-        if GetResourceState("mh-vehiclekeyitem") == 'missing' then
-            TriggerEvent('vehiclekeys:client:RemoveKeys', GetVehicleNumberPlateText(veh))
-        end
-
-        if GetResourceState("mh-vehiclekeyitem") ~= 'missing' then
-            TriggerEvent('mh-vehiclekeyitem:client:DeleteKey', plate)
-        end
-    end
-end
-
 local function GetIn(entity)
     TaskWarpPedIntoVehicle(PlayerPedId(), entity, -1)
     FreezeEntityPosition(entity, false)
@@ -911,6 +891,12 @@ RegisterNetEvent('qb-trailers:client:park', function()
                 currentTruck = nil
                 currentTrailer = nil
                 currentTruckPlate = nil
+                if GetResourceState("mh-vehiclekeyitem") == 'missing' then
+                    TriggerEvent('vehiclekeys:client:RemoveKeys', GetVehicleNumberPlateText(veh))
+                end
+                if GetResourceState("mh-vehiclekeyitem") ~= 'missing' then
+                    TriggerEvent('mh-vehiclekeyitem:client:DeleteKey', plate)
+                end
                 TaskLeaveVehicle(ped, vehicle)
                 Wait(1500)
                 DeleteVehicle(vehicle)
