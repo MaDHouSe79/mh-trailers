@@ -891,8 +891,11 @@ RegisterNetEvent('qb-trailers:client:park', function()
                 currentTruck = nil
                 currentTrailer = nil
                 currentTruckPlate = nil
+                currentTruckCoords = nil
+                currentTrailerPlate = nil
+                currentTrailerCoords = nil
                 if GetResourceState("mh-vehiclekeyitem") ~= 'missing' then
-                    TriggerEvent('vehiclekeys:client:RemoveKeys', GetVehicleNumberPlateText(veh))
+                    TriggerEvent('vehiclekeys:client:RemoveKeys', plate)
                 end
                 if GetResourceState("mh-vehiclekeyitem") ~= 'missing' then
                     TriggerEvent('mh-vehiclekeyitem:client:DeleteKey', plate)
