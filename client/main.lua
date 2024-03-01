@@ -909,6 +909,7 @@ RegisterNetEvent('qb-trailers:client:park', function()
             local plate = GetPlate(vehicle)
             if currentTruck == vehicle then
                 currentTruck = nil
+                currentTrailer = nil
                 currentTruckPlate = nil
                 TaskLeaveVehicle(ped, vehicle)
                 Wait(1500)
