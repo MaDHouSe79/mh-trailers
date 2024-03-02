@@ -112,9 +112,9 @@ function SpawnTruck(model, position, heading)
     SetVehicleBodyHealth(vehicle, 1000.0)
     if GetResourceState("qb-vehiclekeys") ~= 'missing' then
         if Config.UseServerTrigger then
-            TriggerServerEvent(Config.ServerVehicleKeyTrigger, GetPlate(vehicle))
+            TriggerServerEvent(Config.ServerVehicleKeyTrigger, plate)
         elseif Config.UseClientTrigger then
-            TriggerEvent(Config.ClientVehicleKeyTrigger, GetPlate(vehicle))
+            TriggerEvent(Config.ClientVehicleKeyTrigger, plate)
         end
     end
     if GetResourceState("mh-vehiclekeyitem") ~= 'missing' then
