@@ -15,10 +15,11 @@ elseif GetResourceState("qb-core") ~= 'missing' then
 end
 
 if GetResourceState("LegacyFuel") ~= 'missing' then
-    Config.FuelScript= 'LegacyFuel'
+    Config.FuelScript = 'LegacyFuel'
 elseif GetResourceState("mh-fuel") ~= 'missing' then
     Config.FuelScript = 'mh-fuel'
 end
+-- Config.FuelScript = 'your-fuel-script' -- use this if you have your own fuel script thats not in the list
 
 if GetResourceState("ox_lib") ~= 'missing' then
     Config.Target = "ox_target" -- qb-target or ox_target
