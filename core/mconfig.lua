@@ -8,8 +8,10 @@ Config = {}
 Config.Framework = nil
 if GetResourceState("es_extended") ~= 'missing' then
     Config.Framework = 'esx'
+    Config.MoneyType = 'money'
 elseif GetResourceState("qb-core") ~= 'missing' then
     Config.Framework = 'qb'
+    Config.MoneyType = 'cash'
 end
 
 if GetResourceState("LegacyFuel") ~= 'missing' then
@@ -34,4 +36,3 @@ Config.Locale = "en" -- use 'en' or 'nl'
 
 -- Cash Settings
 Config.MoneySign = "€" -- (€/$)
-Config.MoneyType = {["qb"] = "cash", ['esx'] = "money"}
