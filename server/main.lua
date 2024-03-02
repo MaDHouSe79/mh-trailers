@@ -44,7 +44,7 @@ CreateCallback("mh-trailers:server:pay", function(source, cb)
         end
     elseif GetMoney(src, Config.MoneyType) < Config.Rent.shop.cost then
         if GetMoney(src, 'bank') >= Config.Rent.shop.cost then
-            if RemoveMoney(src, Config.MoneyType, Config.Rent.shop.cost, "rent-trailer-paid") then
+            if RemoveMoney(src, 'bank', Config.Rent.shop.cost, "rent-trailer-paid") then
                 cb(true)
             else
                 cb(false)
