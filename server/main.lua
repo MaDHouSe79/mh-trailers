@@ -36,14 +36,20 @@ end
 CreateCallback("mh-trailers:server:pay", function(source, cb)
     local src = source
     local player = GetPlayer(src)
-    if GetMoney(src, Config.MoneyType[Config.Framework]) >= Config.Rent.shop.cost then
-        RemoveMoney(src, Config.MoneyType[Config.Framework], Config.Rent.shop.cost, "rent-trailer-paid")
-        cb(true)
-    else
-        if GetMoney(src,'bank') >= Config.Rent.shop.cost then
-            RemoveMoney(src, Config.MoneyType[Config.Framework], Config.Rent.shop.cost, "rent-trailer-paid")
+    if GetMoney(src, Config.MoneyType) >= Config.Rent.shop.cost then
+        if RemoveMoney(src, Config.MoneyType, Config.Rent.shop.cost, "rent-trailer-paid") then
             cb(true)
         else
+            cb(false)
+        end
+    elseif GetMoney(src, Config.MoneyType) < Config.Rent.shop.cost then
+        if GetMoney(src, 'bank') >= Config.Rent.shop.cost then
+            if RemoveMoney(src, Config.MoneyType, Config.Rent.shop.cost, "rent-trailer-paid") then
+                cb(true)
+            else
+                cb(false)
+            end
+        elseif GetMoney(src, 'bank') < Config.Rent.shop.cost then
             cb(false)
         end
     end
