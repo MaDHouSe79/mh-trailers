@@ -35,5 +35,12 @@ Config.NotifyTitle = "MH Trailers"
 -- Language
 Config.Locale = "en" -- use 'en' or 'nl' 
 
+-- Vehiclekeys trigger
+Config.UseServerTrigger = false
+Config.ServerVehicleKeyTrigger = "qb-vehiclekeys:server:AcquireVehicleKeys"
+
+Config.UseClientTrigger = true
+Config.ClientVehicleKeyTrigger = "vehiclekeys:client:SetOwner"
+
 -- Cash Settings
 Config.MoneySign = "€" -- (€/$)
