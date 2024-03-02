@@ -111,7 +111,11 @@ function SpawnTruck(model, position, heading)
     SetVehicleEngineHealth(vehicle, 1000.0)
     SetVehicleBodyHealth(vehicle, 1000.0)
     if GetResourceState("qb-vehiclekeys") ~= 'missing' then
-        TriggerServerEvent("qb-vehiclekeys:server:AcquireVehicleKeys", GetPlate(vehicle))
+        if Config.UseServerTrigger then
+            TriggerServerEvent(Config.ServerVehicleKeyTrigger, GetPlate(vehicle))
+        elseif Config.UseClientTrigger then
+            TriggerEvent(Config.ClientVehicleKeyTrigger, GetPlate(vehicle))
+        end
     end
     if GetResourceState("mh-vehiclekeyitem") ~= 'missing' then
         TriggerEvent('mh-vehiclekeyitem:client:CreateTempKey', vehicle)
