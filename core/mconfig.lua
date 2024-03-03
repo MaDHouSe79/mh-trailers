@@ -14,13 +14,16 @@ elseif GetResourceState("qb-core") ~= 'missing' then
     Config.MoneyType = 'cash'
 end
 
+-- Fuel script detection
 if GetResourceState("LegacyFuel") ~= 'missing' then
     Config.FuelScript = 'LegacyFuel'
 elseif GetResourceState("mh-fuel") ~= 'missing' then
     Config.FuelScript = 'mh-fuel'
+--elseif GetResourceState("your-fuel-script") ~= 'missing' then -- use this if you have your own fuel script thats not in the list
+--  Config.FuelScript = 'your-fuel-script'
 end
--- Config.FuelScript = 'your-fuel-script' -- use this if you have your own fuel script thats not in the list
 
+-- Target detection
 if GetResourceState("ox_lib") ~= 'missing' then
     Config.Target = "ox_target" -- qb-target or ox_target
     Config.Menu = "ox_lib"      -- qb-input or ox_lib
