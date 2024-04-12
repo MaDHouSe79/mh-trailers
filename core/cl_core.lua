@@ -32,10 +32,6 @@ if Config.Framework == 'esx' then
         Framework.Game.DeleteVehicle(vehicle)
     end
 
-    function GetPlate(vehicle)
-        return GetVehicleNumberPlateTextIndex(vehicle)
-    end
-
     function Notify(message, type, time)
         Framework.ShowNotification(message, type, time)
     end
@@ -58,11 +54,7 @@ elseif Config.Framework == 'qb' then
     function DeleteVehicle(vehicle)
         Framework.Functions.DeleteVehicle(vehicle)
     end
-
-    function GetPlate(vehicle)
-        return GetVehicleNumberPlateTextIndex(vehicle)
-    end
-
+    
     function GetVehicles()
         SharedVehicles = Framework.Shared.Vehicles
         return SharedVehicles
@@ -83,6 +75,10 @@ local entityEnumerator = {
     end
 }
 
+function GetPlate(vehicle)
+    return GetVehicleNumberPlateTextIndex(vehicle)
+end
+
 function LoadModel(model)
     if not HasModelLoaded(model) then
         RequestModel(model)
@@ -101,7 +97,7 @@ end
 function SpawnTruck(model, position, heading)
     LoadModel(model)
     local vehicle = CreateVehicle(model, position, heading, true, false)
-    local plate = 'T' .. string.format('%06d', math.random(1, 999))
+    local plate = 'TRUCK' .. math.random(10, 99)
     SetEntityAsMissionEntity(vehicle, true, true)
     SetVehicleNumberPlateText(vehicle, plate)
     SetEntityHeading(vehicle, heading)
@@ -115,7 +111,11 @@ function SpawnTruck(model, position, heading)
     SetVehicleEngineHealth(vehicle, 1000.0)
     SetVehicleBodyHealth(vehicle, 1000.0)
     if GetResourceState("qb-vehiclekeys") ~= 'missing' then
-        TriggerServerEvent("qb-vehiclekeys:server:AcquireVehicleKeys", Framework.Functions.GetPlate(vehicle))
+        if Config.UseServerTrigger then
+            TriggerServerEvent(Config.ServerVehicleKeyTrigger, plate)
+        elseif Config.UseClientTrigger then
+            TriggerEvent(Config.ClientVehicleKeyTrigger, plate)
+        end
     end
     if GetResourceState("mh-vehiclekeyitem") ~= 'missing' then
         TriggerEvent('mh-vehiclekeyitem:client:CreateTempKey', vehicle)
@@ -127,7 +127,7 @@ end
 function SpawnTrailer(model, position, heading)
     LoadModel(model)
     local vehicle = CreateVehicle(model, position, heading, true, false)
-    local plate = 'TR' .. string.format('%06d', math.random(1, 999))
+    local plate = 'TRAILER' .. math.random(10, 99)
     SetEntityAsMissionEntity(vehicle, true, true)
     SetVehicleNumberPlateText(vehicle, plate)
     SetEntityHeading(vehicle, heading)
