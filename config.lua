@@ -2,8 +2,8 @@
 --[[             MH Trailers Script by MaDHouSe            ]] --
 --[[ ===================================================== ]] --
 
-Config.AttachedKey = 38     -- 38 = E
-Config.AttacheKeyTxt = "E"  -- if AttachedKey = 38 this is E
+Config.AttachedKey = 38     -- 38 = E https://docs.fivem.net/docs/game-references/controls/
+Config.KeyToBeDisplayed = "E"  -- if AttachedKey = 38 this is E
 
 Config.Core = {
     KeySystems = {'qs-vehiclekeys', 'mh-vehiclekeyitem'},
