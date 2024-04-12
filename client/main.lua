@@ -35,24 +35,6 @@ local function keySystemDetection()
     return nil -- none of the key systems are detected
 end
 
-local function Park()
-    if IsPedInAnyVehicle(PlayerPedId()) then
-        local veh = GetVehiclePedIsIn(PlayerPedId(), false)
-        TaskLeaveVehicle(PlayerPedId(), veh)
-        Wait(1500)
-        DeleteVehicle(veh)
-        DeleteEntity(GetVehiclePedIsIn(PlayerPedId(), false))
-        local plate = GetPlate(veh)
-        if GetResourceState("mh-vehiclekeyitem") == 'missing' then
-            TriggerEvent('vehiclekeys:client:RemoveKeys', GetVehicleNumberPlateText(veh))
-        end
-
-        if GetResourceState("mh-vehiclekeyitem") ~= 'missing' then
-            TriggerEvent('mh-vehiclekeyitem:client:DeleteKey', plate)
-        end
-    end
-end
-
 local function GetIn(entity)
     TaskWarpPedIntoVehicle(PlayerPedId(), entity, -1)
     FreezeEntityPosition(entity, false)
@@ -156,7 +138,12 @@ local function createPed()
                 icon = 'fa-solid fa-coins',
                 action = function()
                     TriggerEvent('mh-trailers:client:TruckAndTrailerMenu')
-                end
+                end,
+                canInteract = function(entity, distance, data)
+                    if currentTruck ~= nil then return false end
+                    if currentTrailer ~= nil then return false end
+                    return true
+                end,
             }},
             distance = 2.0
         })
@@ -168,6 +155,11 @@ local function createPed()
             label = String('rent_a_vehicle'),
             onSelect = function()
                 TriggerEvent('mh-trailers:client:TruckAndTrailerMenu')
+            end,
+            canInteract = function(entity, distance, data)
+                if currentTruck ~= nil then return false end
+                if currentTrailer ~= nil then return false end
+                return true
             end,
             distance = 2.0
         }})
@@ -929,6 +921,7 @@ RegisterNetEvent('qb-trailers:client:park', function()
             local plate = GetPlate(vehicle)
             if currentTruck == vehicle then
                 currentTruck = nil
+                currentTrailer = nil
                 currentTruckPlate = nil
                 TaskLeaveVehicle(ped, vehicle, 0)
                 Wait(1500)
