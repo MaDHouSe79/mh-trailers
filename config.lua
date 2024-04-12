@@ -5,8 +5,13 @@
 Config.AttachedKey = 38     -- 38 = E
 Config.AttacheKeyTxt = "E"  -- if AttachedKey = 38 this is E
 
+Config.Core = {
+    KeySystems = {'qs-vehiclekeys', 'mh-vehiclekeyitem'},
+    UseTarget = GetConvar('UseTarget', 'false') == 'true' -- Use qb-target interactions (don't change this, go to your server.cfg and add setr UseTarget true)
+}
+
 Config.Models = {
-    trucks = {'hauler', 'bison', 'sadler'},
+    trucks = {'packer', 'phantom3', 'phantom', 'hauler', 'bison', 'sadler'},
     trailers = {'tr2', 'trailersmall', 'boattrailer', 'trflat', 'pjtrailer'},
     ramp = "imp_prop_flatbed_ramp"
 }
@@ -14,6 +19,21 @@ Config.Models = {
 -- menu vehicle check
 -- this vehicles can use the selected trailers.
 Config.AllowToMerge = {
+    ['packer'] = {
+        ['tr2'] = true,
+        ['trflat'] = true,
+        ['pjtrailer'] = true
+    },
+    ['phantom3'] = {
+        ['tr2'] = true,
+        ['trflat'] = true,
+        ['pjtrailer'] = true
+    },
+    ['phantom'] = {
+        ['tr2'] = true,
+        ['trflat'] = true,
+        ['pjtrailer'] = true
+    },
     ['hauler'] = {
         ['tr2'] = true,
         ['trflat'] = true,
@@ -33,9 +53,15 @@ Config.AllowToMerge = {
 Config.Offsets = {
     ['tr2'] = {
         ['hauler'] = 7.0,
+        ['phantom'] = 8.0,
+        ['phantom3'] = 8.0,
+        ['packer'] = 8.0,
     },
     ['trflat'] = {
         ['hauler'] = 7.0,
+        ['phantom'] = 8.0,
+        ['phantom3'] = 8.0,
+        ['packer'] = 8.0,
     },
     ['boattrailer'] = {
         ['bison'] = 7.0,

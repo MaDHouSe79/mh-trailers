@@ -18,6 +18,23 @@ local tmpTruck = nil
 local tmpTrailer = nil
 local rentPed = nil
 
+--[[ Client Function: keySystemDetection
+    Description:
+        Runs through multiple key systems stored in config
+        Returns the one that's running
+        TODO: This will return the first one in the order they are stored in the config. if using multiple, re-organise them with the 1st one being the one you use
+    Return:
+        resource [string]: name of the first running key ressource
+]]--
+local function keySystemDetection()
+    for _, resourceName in ipairs(Config.Core.KeySystems) do
+        if GetResourceState(resourceName) == "started" then
+            return resourceName
+        end
+    end
+    return nil -- none of the key systems are detected
+end
+
 local function Park()
     if IsPedInAnyVehicle(PlayerPedId()) then
         local veh = GetVehiclePedIsIn(PlayerPedId(), false)
@@ -41,7 +58,7 @@ local function GetIn(entity)
     FreezeEntityPosition(entity, false)
     SetVehicleHandbrake(entity, false)
     DetachEntity(entity, true, true)
-    SetVehicleEngineOn(entity, true, true)
+    SetVehicleEngineOn(entity, true, true, false)
 end
 
 local function createGarage()
@@ -90,6 +107,21 @@ local function SpawnTruckAndTrailer(truckModel, trailerModel)
         if trailerModel == "boattrailer" or trailerModel == 'trailersmall' then truckModel = "sadler" end
         spawnTruck(truckModel, Config.Rent.spawn.truck, Config.Rent.spawn.heading)
         heading = GetEntityHeading(currentTruck)
+
+        if keySystemDetection() then
+            if "qs-vehiclekeys" == keySystemDetection() then
+                print('debug 1')
+                --compat for qs-vehiclekeys
+                local model = GetDisplayNameFromVehicleModel(GetEntityModel(currentTruck))
+                local plate = GetVehicleNumberPlateText(currentTruck)
+                exports['qs-vehiclekeys']:GiveKeys(plate, model, true)
+                exports["qs-vehiclekeys"]:AddRentalPapers(plate, model)
+            elseif "mh-vehiclekeyitem" == keySystemDetection()  then
+                -- TODO: add mh-vehiclekeyitem support here
+            end
+        else
+            print("MH-Trailers: WARNING: Key System detected, but none returned!")
+        end
     end
     if trailerModel ~= nil then
         if trailerModel == "boattrailer" or trailerModel == 'trailersmall' then heading = heading - 45 end
@@ -802,7 +834,7 @@ if Config.Menu == "ox_lib" then
 
 elseif Config.Menu == "qb-input" then
 
-    function SelectTruckMent()
+    function SelectTruckMenu()
         local truckModels = {}
         for key, v in pairs(Config.Models.trucks) do
             truckModels[#truckModels + 1] = {
@@ -898,8 +930,24 @@ RegisterNetEvent('qb-trailers:client:park', function()
             if currentTruck == vehicle then
                 currentTruck = nil
                 currentTruckPlate = nil
-                TaskLeaveVehicle(ped, vehicle)
+                TaskLeaveVehicle(ped, vehicle, 0)
                 Wait(1500)
+
+                if keySystemDetection() then
+                    if "qs-vehiclekeys" == keySystemDetection() then
+                        print('debug 2')
+                        --compat for qs-vehiclekeys
+                        local model = GetDisplayNameFromVehicleModel(GetEntityModel(vehicle))
+                        local plate = GetVehicleNumberPlateText(vehicle)
+                        exports['qs-vehiclekeys']:RemoveKeys(plate, model)
+                        exports["qs-vehiclekeys"]:RemoveRentalPapers(plate, model)
+                    elseif "mh-vehiclekeyitem" == keySystemDetection()  then
+                        -- TODO: add mh-vehiclekeyitem support here
+                    end
+                else
+                    print("MH-Trailers: WARNING: Key System detected, but none returned!")
+                end
+
                 DeleteVehicle(vehicle)
                 DeleteEntity(vehicle)
             else
