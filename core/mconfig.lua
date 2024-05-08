@@ -47,3 +47,17 @@ Config.ClientVehicleKeyTrigger = "vehiclekeys:client:SetOwner"
 
 -- Cash Settings
 Config.MoneySign = "€" -- (€/$)
+
+-- find more https://fontawesome.com/
+Config.Fontawesome = {
+    boss = "fa-solid fa-people-roof",
+    pump = "fa-solid fa-gas-pump",
+    trucks = "fa-solid fa-truck",
+    trailers = "fa-solid fa-trailer",
+    garage = "fa-solid fa-warehouse",
+    goback = "fa-solid fa-backward-step",
+    shop = "fa-solid fa-basket-shopping",
+    buy = "fa-solid fa-cash-register",
+    stop = "fa-solid fa-stop",
+    store = "fa-solid fa-store",
+}
