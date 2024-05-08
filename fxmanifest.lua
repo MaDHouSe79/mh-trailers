@@ -11,7 +11,7 @@ version '1.0.0'
 
 shared_scripts {
     --'@es_extended/imports.lua', -- only if you use esx framework
-    --'@ox_lib/init.lua', -- only if you use ox_lib
+    '@ox_lib/init.lua', -- only if you use ox_lib
     'core/mconfig.lua',
     'core/locale.lua',
     'core/vehicles.lua',
