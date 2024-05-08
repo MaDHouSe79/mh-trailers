@@ -712,137 +712,72 @@ local function LoadTarget()
     end
 end
 
--- Open first menu
-if Config.Menu == "ox_lib" then
-
-    local function ShopMenu()
-        lib.registerMenu({
-            id = 'shop_menu_id',
-            title = 'Rent Vehicle',
-            position = 'center',
-            options = {
-                {label = 'Rent a '..tmpTruck.." with a "..tmpTrailer, args = {vehicle = tmpTruck, trailer = tmpTrailer}},
-            }
-        }, function(selected, scrollIndex, args)
-            TriggerCallback("mh-trailers:server:pay", function(hasPaid)
-                if hasPaid then
-                    SpawnTruckAndTrailer(tostring(args.vehicle), tostring(args.trailer))
-                else
-                    Notify(String('not_enough_money_to_rent'), "error")
+local function SelectTrailerMenu(truck)
+    local options = {}
+    for _, trailer in pairs(Config.Models.trailers) do
+        if Config.AllowToMerge[truck][trailer] then 
+            options[#options + 1] = {
+                title = "Select a Trailer",
+                icon = Config.Fontawesome.goback,
+                description = trailer,
+                arrow = false,
+                onSelect = function()
+                    SpawnTruckAndTrailer(truck, trailer)
                 end
-            end)
-        end)
-        lib.showMenu('shop_menu_id')
+            }
+        end
     end
 
-    local function SelectTrailerMenu(model)
-        local trail, trails = nil, {}
-        trails[#trails + 1] = "Select a trailer"
-        for _, v in pairs(Config.Models.trailers) do
-            if Config.AllowToMerge[tmpTruck][v] then 
-                trails[#trails + 1] = v 
+    options[#options + 1] = {
+        title = "Back",
+        icon = Config.Fontawesome.goback,
+        description = '',
+        arrow = false,
+        onSelect = function()
+            SelectTruckMenu()
+        end
+    }
+
+    lib.registerContext({
+        id = 'selectTrailerMenu',
+        title = "MH Trailers",
+        icon = Config.Fontawesome.trailers,
+        options = options
+    })
+    lib.showContext('selectTrailerMenu')
+end
+
+function SelectTruckMenu()
+    local options = {}
+
+    for _, v in pairs(Config.Models.trucks) do
+        options[#options + 1] = {
+            title = "Select a Truck",
+            --icon = Config.Fontawesome.goback,
+            description = v,
+            arrow = false,
+            onSelect = function()
+                SelectTrailerMenu(v)
             end
-        end
-
-        lib.registerMenu({
-            id = 'trailer_menu_id',
-            title = 'Select a Trailer',
-            position = 'center',
-            onSideScroll = function(selected, scrollIndex, args)
-                trail = trails[scrollIndex]
-            end,
-            onSelected = function(selected, secondary, args)
-                trail = trails[selected]
-            end,
-            options = {
-                {label = tmpTruck..' Trailers', icon = 'arrows-up-down-left-right', values = trails},
-            }
-        }, function(selected, scrollIndex, args)
-            tmpTrailer = tostring(trail)
-            ShopMenu()
-        end)
-        lib.showMenu('trailer_menu_id')
+        }
     end
 
-    function SelectTruckMenu()
-        local truck, trucks = nil, {}
-
-        trucks[#trucks + 1] = "Select a Truck"
-        for _, v in pairs(Config.Models.trucks) do
-            trucks[#trucks + 1] = v
+    options[#options + 1] = {
+        title = "Close",
+        --icon = Config.Fontawesome.goback,
+        description = '',
+        arrow = false,
+        onSelect = function()
         end
+    }
 
-        lib.registerMenu({
-            id = 'truck_menu_id',
-            title = 'Select a Truck',
-            position = 'center',
-            onSideScroll = function(selected, scrollIndex, args)
-                truck = trucks[scrollIndex]
-            end,
-            onSelected = function(selected, secondary, args)
-                truck = trucks[selected]
-            end,
-            options = {
-                {label = 'Trucks', icon = 'arrows-up-down-left-right', values = trucks},
-            }
-        }, function(selected, scrollIndex, args)
-            tmpTruck = tostring(truck)
-            SelectTrailerMenu(tostring(truck))
-        end)
-        lib.showMenu('truck_menu_id')
-    end
-
-elseif Config.Menu == "qb-input" then
-
-    function SelectTruckMenu()
-        local truckModels = {}
-        for key, v in pairs(Config.Models.trucks) do
-            truckModels[#truckModels + 1] = {
-                value = v,
-                text = String('truck') .. " " .. v
-            }
-        end
-        local trailerModels = {}
-        for key, v in pairs(Config.Models.trailers) do
-            trailerModels[#trailerModels + 1] = {
-                value = v,
-                text = String('trailer') .. " " .. v
-            }
-        end
-
-        local menu = exports["qb-input"]:ShowInput({
-            header = String('select_header'),
-            submitText = "",
-            inputs = {{
-                text = String('select_truck'),
-                name = "truck",
-                type = "select",
-                options = truckModels,
-                isRequired = true
-            }, {
-                text = String('select_trailer'),
-                name = "trailer",
-                type = "select",
-                options = trailerModels,
-                isRequired = true
-            }}
-        })
-        if menu then
-            if not menu.truck and not menu.trailer then
-                return
-            else
-                TriggerCallback("mh-trailers:server:pay", function(hasPaid)
-                    if hasPaid then
-                        tmpTruck = tostring(menu.truck)
-                        tmpTrailer = tostring(menu.trailer)
-                        SpawnTruckAndTrailer(tostring(menu.truck), tostring(menu.trailer))
-                    else
-                        Notify(String('not_enough_money_to_rent'), "error")
-                    end
-                end)
-            end
-        end
-    end
+    lib.registerContext({
+        id = 'selectTruckMenu',
+        title = "MH Trailers",
+        --icon = Config.Fontawesome.trailers,
+        options = options
+    })
+    lib.showContext('selectTruckMenu')
 
 end
 
