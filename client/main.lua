@@ -158,14 +158,6 @@ local function IsTrailer(entity)
     return isTrailer
 end
 
-local function RemoveVehicleModelFromTarget(model, id)
-    if Config.Target == "ox_target" then
-        exports.ox_target:removeModel(model, id)
-    elseif Config.Target == "qb-target" then
-        exports['qb-target']:RemoveTargetModel(model, id)
-    end
-end
-
 local function AddVehicleModelToTarGet(model, id)
     if Config.Target == "qb-target" then
         exports['qb-target']:AddTargetModel(model, {
@@ -452,7 +444,6 @@ end
 local function LoadTarget()
     -- target for all vehicles
     for k, v in pairs(Config.Vehicles) do
-        RemoveVehicleModelFromTarget(v.model, 'getin')
         AddVehicleModelToTarGet(v.model, 'getin')
     end
     if Config.Target == "qb-target" then
