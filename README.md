@@ -110,7 +110,6 @@ ensure qb-core
 ensure [qb]
 
 ensure ox_target
-ensure mh-syncfuel
 
 ensure [standalone]
 ensure [voice]
