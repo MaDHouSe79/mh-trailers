@@ -70,7 +70,7 @@ shared_scripts {
 ```conf
 shared_scripts {
     --'@es_extended/imports.lua', -- only if you use esx framework
-    --'@ox_lib/init.lua',         -- only if you use ex_lib
+    '@ox_lib/init.lua',         -- only if you use ex_lib
     'core/mconfig.lua',
     'core/locale.lua',
     'core/vehicles.lua',
