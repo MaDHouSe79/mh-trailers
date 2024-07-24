@@ -25,8 +25,8 @@ end
 
 -- Target detection
 if GetResourceState("ox_lib") ~= 'missing' then
-    Config.Target = "ox_target" -- qb-target or ox_target
-    Config.Menu = "ox_lib"      -- qb-input or ox_lib
+    Config.Target = "qb-target" -- qb-target or ox_target
+    Config.Menu = "qb-input"      -- qb-input or ox_lib
 elseif GetResourceState("ox_lib") == 'missing' then
     Config.Target = "qb-target" -- qb-target or ox_target
     Config.Menu = "qb-input"    -- qb-input or ox_lib

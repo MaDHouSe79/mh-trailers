@@ -6,7 +6,6 @@ local platformDoorNumber = nil -- 4 platform
 local currentTruck = nil
 local currentTrailer = nil
 local currentTruckPlate = nil
-local currentTruckCoords = nil
 local currentTrailerPlate = nil
 local currentTrailerCoords = nil
 local rampIsOpen = false
@@ -18,12 +17,29 @@ local tmpTruck = nil
 local tmpTrailer = nil
 local rentPed = nil
 
+--[[ Client Function: keySystemDetection
+    Description:
+        Runs through multiple key systems stored in config
+        Returns the one that's running
+        TODO: This will return the first one in the order they are stored in the config. if using multiple, re-organise them with the 1st one being the one you use
+    Return:
+        resource [string]: name of the first running key ressource
+]]--
+local function keySystemDetection()
+    for _, resourceName in ipairs(Config.Core.KeySystems) do
+        if GetResourceState(resourceName) == "started" then
+            return resourceName
+        end
+    end
+    return nil -- none of the key systems are detected
+end
+
 local function GetIn(entity)
     TaskWarpPedIntoVehicle(PlayerPedId(), entity, -1)
     FreezeEntityPosition(entity, false)
     SetVehicleHandbrake(entity, false)
     DetachEntity(entity, true, true)
-    SetVehicleEngineOn(entity, true, true)
+    SetVehicleEngineOn(entity, true, true, false)
 end
 
 local function createGarage()
@@ -72,6 +88,23 @@ local function SpawnTruckAndTrailer(truckModel, trailerModel)
         if trailerModel == "boattrailer" or trailerModel == 'trailersmall' then truckModel = "sadler" end
         spawnTruck(truckModel, Config.Rent.spawn.truck, Config.Rent.spawn.heading)
         heading = GetEntityHeading(currentTruck)
+
+        if keySystemDetection() then
+            if "qs-vehiclekeys" == keySystemDetection() then
+                print('debug 1')
+                --compat for qs-vehiclekeys
+                local model = GetDisplayNameFromVehicleModel(GetEntityModel(currentTruck))
+                local plate = GetVehicleNumberPlateText(currentTruck)
+                exports['qs-vehiclekeys']:GiveKeys(plate, model, true)
+                exports["qs-vehiclekeys"]:AddRentalPapers(plate, model)
+            -- elseif "keyressourcename" == keySystemDetection()  then
+                -- TODO: add whatever needs to be done support here
+            elseif "mh-vehiclekeyitem" == keySystemDetection()  then
+                -- TODO: add mh-vehiclekeyitem support here
+            end
+        else
+            print("MH-Trailers: WARNING: Key System detected, but none returned!")
+        end
     end
     if trailerModel ~= nil then
         if trailerModel == "boattrailer" or trailerModel == 'trailersmall' then heading = heading - 45 end
@@ -95,7 +128,7 @@ local function createPed()
     local current = GetHashKey(Config.Rent.shop.ped)
     LoadModel(current)
     rentPed = CreatePed(0, current, Config.Rent.shop.location.x, Config.Rent.shop.location.y, Config.Rent.shop.location.z - 1, Config.Rent.shop.location.w, false, false)
-    TaskStartScenarioInPlace(rentPed, Config.Rent.shop.location.scenario, true)
+    TaskStartScenarioInPlace(rentPed, Config.Rent.shop.location.scenario, 0, true)
     FreezeEntityPosition(rentPed, true)
     SetEntityInvincible(rentPed, true)
     SetBlockingOfNonTemporaryEvents(rentPed, true)
@@ -810,24 +843,32 @@ end)
 RegisterNetEvent('qb-trailers:client:park', function()
     local ped = PlayerPedId()
     if currentTruck ~= nil then
-        if IsPedInAnyVehicle(ped) then
+        if IsPedInAnyVehicle(ped, true) then
             local vehicle = GetVehiclePedIsIn(ped, false)
             local plate = GetPlate(vehicle)
             if currentTruck == vehicle then
                 currentTruck = nil
-                currentTrailer = nil
-                currentTruckPlate = nil
-                currentTruckCoords = nil
-                currentTrailerPlate = nil
-                currentTrailerCoords = nil
-                if GetResourceState("mh-vehiclekeyitem") ~= 'missing' then
-                    TriggerEvent('vehiclekeys:client:RemoveKeys', plate)
-                end
-                if GetResourceState("mh-vehiclekeyitem") ~= 'missing' then
-                    TriggerEvent('mh-vehiclekeyitem:client:DeleteKey', plate)
-                end
-                TaskLeaveVehicle(ped, vehicle)
+                TaskLeaveVehicle(ped, vehicle, 0)
                 Wait(1500)
+
+                if keySystemDetection() then
+                    if "qs-vehiclekeys" == keySystemDetection() then
+                        print('debug 2')
+                        --compat for qs-vehiclekeys
+                        local model = GetDisplayNameFromVehicleModel(GetEntityModel(vehicle))
+                        local plate = GetVehicleNumberPlateText(vehicle)
+                        exports['qs-vehiclekeys']:RemoveKeys(plate, model)
+                        exports["qs-vehiclekeys"]:RemoveRentalPapers(plate, model)
+                    -- elseif "keyressourcename" == keySystemDetection()  then
+                    --     -- TODO: add whatever needs to be done support here
+                    elseif "mh-vehiclekeyitem" == keySystemDetection()  then
+                        TriggerEvent('mh-vehiclekeyitem:client:DeleteKey', plate)
+                    end
+                else
+                    TriggerEvent('vehiclekeys:client:RemoveKeys', GetVehicleNumberPlateText(vehicle))
+                    print("MH-Trailers: WARNING: Key System detected, but none returned!")
+                end
+
                 DeleteVehicle(vehicle)
                 DeleteEntity(vehicle)
             else
@@ -926,10 +967,10 @@ CreateThread(function()
                             if IsEntityTouchingEntity(currentTrailer, vehicle) then
                                 if IsThisModelABoat(GetEntityModel(vehicle)) then -- is a boattrailer
                                     if GetEntityModel(currentTrailer) == 524108981 then
-                                        DisplayHelpText(String('press_boat_message', Config.AttacheKeyTxt))
+                                        DisplayHelpText(String('press_boat_message', Config.KeyToBeDisplayed))
                                     end
                                 else
-                                    DisplayHelpText(String('press_other_message', Config.AttacheKeyTxt))
+                                    DisplayHelpText(String('press_other_message', Config.KeyToBeDisplayed))
                                 end
                             end
                             if IsControlJustPressed(0, Config.AttachedKey) then
@@ -950,7 +991,7 @@ CreateThread(function()
                 local garageCoords = Config.Rent.spawn.garage
                 local distance = #(vector3(playerCoords.x, playerCoords.y, playerCoords.z) - vector3(garageCoords.x, garageCoords.y, garageCoords.z))
                 if distance <= 3.0 then
-                    DisplayHelpText(String('press_to_park', Config.AttacheKeyTxt))
+                    DisplayHelpText(String('press_to_park', Config.KeyToBeDisplayed))
                     if IsControlJustPressed(0, Config.AttachedKey) then TriggerEvent('qb-trailers:client:park') end
                 end
             end
