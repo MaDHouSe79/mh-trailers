@@ -18,6 +18,22 @@ local tmpTruck = nil
 local tmpTrailer = nil
 local rentPed = nil
 
+local function GetDistance(pos1, pos2)
+    if pos1 ~= nil and pos2 ~= nil then
+        return #(vector3(pos1.x, pos1.y, pos1.z) - vector3(pos2.x, pos2.y, pos2.z))
+    end
+end
+
+local function isCloseByShopPed()
+    if rentPed ~= nil then
+        local shopPedCoords = GetEntityCoords(rentPed)
+        local playerCoords = GetEntityCoords(PlayerPedId())
+        local distance = GetDistance(shopPedCoords, playerCoords)
+        if distance < 2.0 then return true end
+    end
+    return false
+end
+
 local function GetIn(entity)
     TaskWarpPedIntoVehicle(PlayerPedId(), entity, -1)
     FreezeEntityPosition(entity, false)
@@ -110,6 +126,7 @@ local function createPed()
                 canInteract = function(entity, distance, data)
                     if currentTruck ~= nil then return false end
                     if currentTrailer ~= nil then return false end
+                    if not isCloseByShopPed() then return false end
                     return true
                 end,
             }},
@@ -127,6 +144,7 @@ local function createPed()
             canInteract = function(entity, distance, data)
                 if currentTruck ~= nil then return false end
                 if currentTrailer ~= nil then return false end
+                if not isCloseByShopPed() then return false end
                 return true
             end,
             distance = 2.0
