@@ -83,20 +83,25 @@ local function spawnTrailer(model, position, heading)
 end
 
 local function SpawnTruckAndTrailer(truckModel, trailerModel)
-    local heading = nil
-    if truckModel ~= nil then
-        if trailerModel == "boattrailer" or trailerModel == 'trailersmall' then truckModel = "sadler" end
-        spawnTruck(truckModel, Config.Rent.spawn.truck, Config.Rent.spawn.heading)
-        heading = GetEntityHeading(currentTruck)
-    end
-    if trailerModel ~= nil then
-        if trailerModel == "boattrailer" or trailerModel == 'trailersmall' then heading = heading - 45 end
-
-        local offset = Config.Offsets[trailerModel][truckModel]
-        local coords = GetOffsetFromEntityInWorldCoords(currentTruck, 0.0, -offset, 0.0)
-        local pos = vector3(coords.x, coords.y, coords.z)
-        spawnTrailer(trailerModel, pos, heading)
-    end
+    TriggerCallback('mh-trailers:server:pay', function(result)
+        if result then
+            local heading = nil
+            if truckModel ~= nil then
+                if trailerModel == "boattrailer" or trailerModel == 'trailersmall' then truckModel = "sadler" end
+                spawnTruck(truckModel, Config.Rent.spawn.truck, Config.Rent.spawn.heading)
+                heading = GetEntityHeading(currentTruck)
+            end
+            if trailerModel ~= nil then
+                if trailerModel == "boattrailer" or trailerModel == 'trailersmall' then heading = heading - 45 end
+                local offset = Config.Offsets[trailerModel][truckModel]
+                local coords = GetOffsetFromEntityInWorldCoords(currentTruck, 0.0, -offset, 0.0)
+                local pos = vector3(coords.x, coords.y, coords.z)
+                spawnTrailer(trailerModel, pos, heading)
+            end
+        else
+            Notify(String('not_enough_money_to_rent'), 'error')
+        end
+    end)
 end
 
 local function deletePed()
