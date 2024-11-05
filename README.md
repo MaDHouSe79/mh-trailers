@@ -167,6 +167,16 @@ ensure pma-voice
 - Make sure you add all settings in the config file correctly.
 - cause i'm not going to help adding more trailers, cause it's not that hard to do.
 
+# Trailers does not spawn for esx
+- you need to add the trailers in the vehicles table in your database before it can spawn.
+```sql
+INSERT INTO `vehicles` (`name`, `model`, `price`, `category`) VALUES ('tr2', "tr2", 200000, 'trailers');
+INSERT INTO `vehicles` (`name`, `model`, `price`, `category`) VALUES ('trailersmall', "trailersmall", 100000, 'trailers');
+INSERT INTO `vehicles` (`name`, `model`, `price`, `category`) VALUES ('boattrailer', "boattrailer", 10000, 'trailers');
+INSERT INTO `vehicles` (`name`, `model`, `price`, `category`) VALUES ('trflat', "trflat", 200000, 'trailers');
+INSERT INTO `vehicles` (`name`, `model`, `price`, `category`) VALUES ('pjtrailer', "pjtrailer", 200000, 'trailers');
+```
+
 # LICENSE
 [GPL LICENSE](./LICENSE)<br />
 &copy; [MaDHouSe79](https://www.youtube.com/@MaDHouSe79)
