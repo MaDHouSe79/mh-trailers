@@ -35,4 +35,3 @@ server_scripts {
     'server/main.lua',
     'server/update.lua',
 }
-dependencies {'mh-core'}
