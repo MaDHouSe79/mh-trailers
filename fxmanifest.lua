@@ -17,7 +17,6 @@ shared_scripts {
     'core/vehicles.lua',
     'locales/*.lua',
     'config.lua',
-
 }
 
 client_scripts {
