@@ -26,7 +26,7 @@ end
 
 -- Target detection
 if GetResourceState("ox_target") ~= 'missing' then
-    Config.Target = "ox_target" -- ox_target or qb-target
+    Config.Target = "ox_target"
 elseif GetResourceState("qb-target") == 'missing' then
     Config.Target = "qb-target"
 end
