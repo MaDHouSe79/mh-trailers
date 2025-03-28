@@ -17,13 +17,18 @@ end
 -- Fuel script
 Config.FuelScript = 'LegacyFuel'
 
--- Target detection
+-- Lib or input detection
 if GetResourceState("ox_lib") ~= 'missing' then
-    Config.Target = "ox_target" -- qb-target or ox_target
-    Config.Menu = "ox_lib"      -- qb-input or ox_lib
+    Config.Menu = "ox_lib"
 elseif GetResourceState("ox_lib") == 'missing' then
-    Config.Target = "qb-target" -- qb-target or ox_target
-    Config.Menu = "qb-input"    -- qb-input or ox_lib
+    Config.Menu = "qb-input"
+end
+
+-- Target detection
+if GetResourceState("ox_target") ~= 'missing' then
+    Config.Target = "ox_target" -- ox_target or qb-target
+elseif GetResourceState("qb-target") == 'missing' then
+    Config.Target = "qb-target"
 end
 
 -- Notify System
