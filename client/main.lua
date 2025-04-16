@@ -877,9 +877,11 @@ RegisterNetEvent('mh-trailers:client:toggleDoor', function()
     ToggleDoor()
 end)
 
-RegisterNetEvent('mh-trailers:client:SpawnRamp', function(trailerNetId)
-    local trailer = NetToVeh(trailerNetId)
-    SpawnRamp(trailer)
+RegisterNetEvent('mh-trailers:client:SpawnRamp', function(playerId, trailerNetId)
+    if playerId == PlayerPedId() then
+        local trailer = NetToVeh(trailerNetId)
+        SpawnRamp(trailer)
+    end
 end)
 
 RegisterNetEvent('mh-trailers:client:updateTrailers', function(trailerNetID, vehicleList)
