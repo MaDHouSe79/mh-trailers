@@ -84,7 +84,8 @@ end)
 
 RegisterNetEvent('mh-trailers:server:SpawnRamp')
 AddEventHandler('mh-trailers:server:SpawnRamp', function(_trailerNetID)
-    TriggerClientEvent('mh-trailers:client:SpawnRamp', -1, _trailerNetID)
+    local src = source
+    TriggerClientEvent('mh-trailers:client:SpawnRamp', -1, src, _trailerNetID)
 end)
 
 RegisterNetEvent('mh-trailers:server:updateDoor')
