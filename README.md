@@ -5,20 +5,20 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/MH-Scripts/mh-trailers/issues">
-    <img src="https://img.shields.io/github/issues/MH-Scripts/mh-trailers"/> 
+  <a href="https://github.com/MaDHouSe79/mh-trailers/issues">
+    <img src="https://img.shields.io/github/issues/MaDHouSe79/mh-trailers"/> 
   </a>
-  <a href="https://github.com/MH-Scripts/mh-trailers/watchers">
-    <img src="https://img.shields.io/github/watchers/MH-Scripts/mh-trailers"/> 
+  <a href="https://github.com/MaDHouSe79/mh-trailers/watchers">
+    <img src="https://img.shields.io/github/watchers/MaDHouSe79/mh-trailers"/> 
   </a> 
-  <a href="https://github.com/MH-Scripts/mh-trailers/network/members">
-    <img src="https://img.shields.io/github/forks/MH-Scripts/mh-trailers"/> 
+  <a href="https://github.com/MaDHouSe79/mh-trailers/network/members">
+    <img src="https://img.shields.io/github/forks/MaDHouSe79/mh-trailers"/> 
   </a>  
-  <a href="https://github.com/MH-Scripts/mh-trailers/stargazers">
-    <img src="https://img.shields.io/github/stars/MH-Scripts/mh-trailers?color=white"/> 
+  <a href="https://github.com/MaDHouSe79/mh-trailers/stargazers">
+    <img src="https://img.shields.io/github/stars/MaDHouSe79/mh-trailers?color=white"/> 
   </a>
-  <a href="https://github.com/MH-Scripts/mh-trailers/blob/main/LICENSE">
-    <img src="https://img.shields.io/github/license/MH-Scripts/mh-trailers?color=black"/> 
+  <a href="https://github.com/MaDHouSe79/mh-trailers/blob/main/LICENSE">
+    <img src="https://img.shields.io/github/license/MaDHouSe79/mh-trailers?color=black"/> 
   </a>      
 </p>
 
